@@ -51,5 +51,5 @@ app.post("/api/analyze", async (req, res) => {
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {
   const mode = isDemo() ? "demo" : BACKEND === "cli" ? "claude -p (subscription)" : "API key";
-  console.log(`Label Lens: http://localhost:${port}  [${mode}]`);
+  console.log(`Mieru: http://localhost:${port}  [${mode}]`);
 });

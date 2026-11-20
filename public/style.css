@@ -49,7 +49,8 @@ main { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
   max-width: 640px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) 16px 8px;
 }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.logo { font-size: 28px; color: var(--accent); line-height: 1; }
+.logo { width: 40px; height: 40px; border-radius: 10px; flex: none; }
+.latin { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; margin-left: 4px; }
 h1 { font-size: 20px; margin: 0; letter-spacing: 0.02em; }
 .tagline { margin: 0; font-size: 12px; color: var(--muted); }
 #lang {

@@ -1,4 +1,6 @@
-# Label Lens（ラベルレンズ）
+<img src="public/icon.svg" width="96" alt="">
+
+# ミエール（Mieru）
 
 化粧品・スキンケア・サプリのパッケージ（表面・裏面の成分表）を撮影すると、AIが成分を読み取って翻訳し、
 **日本の規制の観点**も含めて注意点を表示する試作Webアプリです。お土産や海外で買った商品など、
@@ -28,7 +30,7 @@ API料金をかけずに、PCにログイン済みの **Claude Code（`claude -p
 claude          # 初回のみ。ログインしたら /exit で終了
 
 npm install
-npm start       # http://localhost:3000  [claude -p (subscription)] と表示されればOK
+npm start       # http://localhost:3000  `Mieru: http://localhost:3000  [claude -p (subscription)]` と表示されればOK
 npm test        # 規制チェックのテスト
 ```
 
@@ -54,4 +56,5 @@ npm test        # 規制チェックのテスト
 - 結果はAIによる参考情報で、医学的な診断ではありません。
 - `lib/rules.js` の規制リストは代表例のみです。公開前に厚生労働省の化粧品基準・「専ら医薬品」リスト等で確認・追加してください。
 - 撮影した画像は解析のためにAnthropicに送信されます（このアプリでは保存しません）。
+- スマホのホーム画面に追加すると、ミエールのアイコンでアプリのように起動できます（Safariの共有ボタン →「ホーム画面に追加」）。
 - 結果を表示したあとに言語を切り替えても、AIの解析文は解析時の言語のままです（再解析で切り替わります）。
