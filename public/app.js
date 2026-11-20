@@ -137,6 +137,26 @@ function renderResult(r) {
         .join("")}</ol>`
     : "";
 
+  const fl = r.food_label;
+  const labelType =
+    fl && fl.type !== "not_food"
+      ? `<p><span class="pill">${esc(L.labelTypes[fl.type] ?? fl.type)}</span></p>
+         ${fl.notification_number ? `<p class="small"><strong>${esc(L.notifNo)}:</strong> ${esc(fl.notification_number)}</p>` : ""}
+         ${fl.explanation ? `<p>${esc(fl.explanation)}</p>` : ""}
+         ${fl.type === "kinousei" ? `<p class="small muted">${esc(L.verifyHint)}</p>` : ""}`
+      : "";
+  const allergenList = r.allergens?.length
+    ? `<ul class="chips">${r.allergens
+        .map((a) => `<li class="chip ${a.kind === "mandatory" ? "chip-strong" : ""}" title="${esc(a.source)}">${esc(a.name)}<small>${esc(L.allergenKinds[a.kind] ?? "")}</small></li>`)
+        .join("")}</ul>`
+    : "";
+  const intake = r.intake?.length
+    ? `<ul class="flags">${r.intake.map((n) => `<li>${badge(n.level)} <strong>${esc(n.nutrient)}</strong> <span class="who">${esc(n.amount)}</span><p>${esc(n.detail)}</p></li>`).join("")}</ul>`
+    : "";
+  const interactions = r.interactions?.length
+    ? `<ul class="flags">${r.interactions.map((n) => `<li>${badge(n.level)} <strong>${esc(n.substance)}</strong> × ${esc(n.with_what)}<p>${esc(n.detail)}</p></li>`).join("")}</ul>`
+    : "";
+
   $("#result").innerHTML = `
     <section class="card overall lv-bg-${esc(r.overall.level)}">
       <div class="overall-head"><span>${esc(L.overall)}</span>${badge(r.overall.level)}</div>
@@ -151,6 +171,10 @@ function renderResult(r) {
       </dl>
     </section>
     ${section(L.ruleHits, ruleHits)}
+    ${section(L.labelType, labelType)}
+    ${section(L.allergens, allergenList)}
+    ${section(L.interactions, interactions)}
+    ${section(L.intake, intake)}
     ${section(L.japanNotes, japan)}
     ${section(L.cautions, cautions)}
     ${section(L.ingredients, ingredients)}
