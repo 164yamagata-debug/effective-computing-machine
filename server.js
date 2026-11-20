@@ -1,6 +1,6 @@
 import express from "express";
 import Anthropic from "@anthropic-ai/sdk";
-import { analyze, hasCredentials } from "./lib/analyze.js";
+import { analyze, isDemo, BACKEND } from "./lib/analyze.js";
 
 const app = express();
 app.use(express.json({ limit: "25mb" }));
@@ -10,7 +10,7 @@ const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/g
 const MAX_IMAGES = 4;
 
 app.get("/api/status", (_req, res) => {
-  res.json({ demo: process.env.DEMO_MODE === "1" || !hasCredentials() });
+  res.json({ demo: isDemo() });
 });
 
 app.post("/api/analyze", async (req, res) => {
@@ -26,6 +26,9 @@ app.post("/api/analyze", async (req, res) => {
   try {
     res.json(await analyze(images, lang));
   } catch (err) {
+    if (["timeout", "cli_missing", "cli_failed"].includes(err.code)) {
+      return res.status(502).json({ error: err.code });
+    }
     if (err.code === "refusal" || err.code === "incomplete") {
       return res.status(422).json({ error: err.code });
     }
@@ -47,5 +50,6 @@ app.post("/api/analyze", async (req, res) => {
 
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {
-  console.log(`Label Lens: http://localhost:${port}${hasCredentials() ? "" : "  (demo mode: no API key)"}`);
+  const mode = isDemo() ? "demo" : BACKEND === "cli" ? "claude -p (subscription)" : "API key";
+  console.log(`Label Lens: http://localhost:${port}  [${mode}]`);
 });

@@ -6,7 +6,7 @@ export const I18N = {
     hint: "成分表がはっきり写るように、明るい場所で撮ってください。外国語の表示でも大丈夫です。",
     analyze: "調べる", analyzing: "解析中…（30秒ほどかかることがあります）",
     needPhoto: "写真を1枚以上追加してください",
-    demo: "デモモード：APIキーが未設定のため、サンプル結果を表示します",
+    demo: "デモモード：サンプル結果を表示しています",
     overall: "総合判定", product: "商品", brand: "ブランド", category: "種類", origin: "国・地域", labelLang: "表示言語",
     ruleHits: "日本の規制チェック（自動）", japanNotes: "日本で気をつけたいこと", cautions: "注意が必要な人・使い方",
     ingredients: "成分一覧", claims: "表示・宣伝文句のチェック", missing: "読み取れなかったこと",
@@ -17,7 +17,7 @@ export const I18N = {
     conf: { high: "高", medium: "中", low: "低" },
     errors: {
       bad_images: "画像を読み込めませんでした。", refusal: "この画像は解析できませんでした。", incomplete: "解析が途中で終わりました。もう一度お試しください。",
-      rate_limited: "混み合っています。少し待ってからお試しください。", default: "エラーが発生しました。もう一度お試しください。",
+      rate_limited: "混み合っています。少し待ってからお試しください。", timeout: "時間がかかりすぎました。もう一度お試しください。", cli_missing: "PCにClaude Code（claudeコマンド）が見つかりません。", cli_failed: "Claude Codeでの解析に失敗しました。PCで claude にログインしているか確認してください。", default: "エラーが発生しました。もう一度お試しください。",
     },
   },
   en: {
@@ -27,7 +27,7 @@ export const I18N = {
     hint: "Shoot in good light so the ingredient list is sharp. Any label language is fine.",
     analyze: "Check", analyzing: "Analysing… (can take ~30 seconds)",
     needPhoto: "Add at least one photo",
-    demo: "Demo mode: no API key is set, so a sample result is shown",
+    demo: "Demo mode: showing a sample result",
     overall: "Overall", product: "Product", brand: "Brand", category: "Type", origin: "Origin", labelLang: "Label language",
     ruleHits: "Japan regulation check (automatic)", japanNotes: "Notes for Japan", cautions: "Who should be careful",
     ingredients: "Ingredients", claims: "Claims on the package", missing: "Could not read",
@@ -38,7 +38,7 @@ export const I18N = {
     conf: { high: "High", medium: "Medium", low: "Low" },
     errors: {
       bad_images: "Could not read the images.", refusal: "This image could not be analysed.", incomplete: "The analysis was cut short. Please try again.",
-      rate_limited: "Busy right now. Please try again shortly.", default: "Something went wrong. Please try again.",
+      rate_limited: "Busy right now. Please try again shortly.", timeout: "It took too long. Please try again.", cli_missing: "Claude Code (the claude command) was not found on the computer.", cli_failed: "Analysis with Claude Code failed. Check that you are logged in to claude on the computer.", default: "Something went wrong. Please try again.",
     },
   },
   zh: {
@@ -48,7 +48,7 @@ export const I18N = {
     hint: "请在明亮处拍摄，使成分表清晰可见。任何语言的标签都可以。",
     analyze: "检查", analyzing: "分析中…（可能需要约30秒）",
     needPhoto: "请至少添加一张照片",
-    demo: "演示模式：未设置API密钥，显示示例结果",
+    demo: "演示模式：显示示例结果",
     overall: "综合判断", product: "商品", brand: "品牌", category: "类别", origin: "产地", labelLang: "标签语言",
     ruleHits: "日本法规检查（自动）", japanNotes: "在日本需注意", cautions: "需注意的人群与用法",
     ingredients: "成分列表", claims: "包装宣传语检查", missing: "未能读取的内容",
@@ -59,7 +59,7 @@ export const I18N = {
     conf: { high: "高", medium: "中", low: "低" },
     errors: {
       bad_images: "无法读取图片。", refusal: "无法分析此图片。", incomplete: "分析中断，请重试。",
-      rate_limited: "当前繁忙，请稍后再试。", default: "发生错误，请重试。",
+      rate_limited: "当前繁忙，请稍后再试。", timeout: "处理超时，请重试。", cli_missing: "电脑上未找到 Claude Code（claude 命令）。", cli_failed: "Claude Code 分析失败，请确认电脑上已登录 claude。", default: "发生错误，请重试。",
     },
   },
   ko: {
@@ -69,7 +69,7 @@ export const I18N = {
     hint: "성분표가 선명하게 보이도록 밝은 곳에서 찍어 주세요. 외국어 표기도 괜찮습니다.",
     analyze: "확인하기", analyzing: "분석 중…(30초 정도 걸릴 수 있어요)",
     needPhoto: "사진을 1장 이상 추가해 주세요",
-    demo: "데모 모드: API 키가 설정되지 않아 샘플 결과를 표시합니다",
+    demo: "데모 모드: 샘플 결과를 표시하고 있습니다",
     overall: "종합 판정", product: "상품", brand: "브랜드", category: "종류", origin: "국가·지역", labelLang: "표시 언어",
     ruleHits: "일본 규제 체크(자동)", japanNotes: "일본에서 주의할 점", cautions: "주의가 필요한 사람·사용법",
     ingredients: "성분 목록", claims: "표시·광고 문구 체크", missing: "읽지 못한 내용",
@@ -80,7 +80,7 @@ export const I18N = {
     conf: { high: "높음", medium: "보통", low: "낮음" },
     errors: {
       bad_images: "이미지를 읽을 수 없습니다.", refusal: "이 이미지는 분석할 수 없습니다.", incomplete: "분석이 중간에 끝났습니다. 다시 시도해 주세요.",
-      rate_limited: "혼잡합니다. 잠시 후 다시 시도해 주세요.", default: "오류가 발생했습니다. 다시 시도해 주세요.",
+      rate_limited: "혼잡합니다. 잠시 후 다시 시도해 주세요.", timeout: "시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.", cli_missing: "PC에서 Claude Code(claude 명령)를 찾을 수 없습니다.", cli_failed: "Claude Code 분석에 실패했습니다. PC에서 claude에 로그인되어 있는지 확인하세요.", default: "오류가 발생했습니다. 다시 시도해 주세요.",
     },
   },
 };
