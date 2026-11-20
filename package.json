@@ -1,0 +1,27 @@
+{
+  "name": "label-lens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/164yamagata-debug/effective-computing-machine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/164yamagata-debug/effective-computing-machine/issues"
+  },
+  "homepage": "https://github.com/164yamagata-debug/effective-computing-machine#readme",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.11.0",
+    "express": "^5.3.0",
+    "zod": "^4.6.7"
+  }
+}
