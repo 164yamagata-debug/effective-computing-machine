@@ -1,4 +1,5 @@
 // Side-by-side comparison table for 2-4 saved results.
+import { computeScore } from "./score.js";
 export const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const badgeHtml = (L, level) => `<span class="badge lv-${esc(level)}">${esc(L.levels[level] ?? level)}</span>`;
 
@@ -22,6 +23,10 @@ export function renderCompareTable(entries, L) {
   const rows = [
     [L.photo, (e) => (e.thumb ? `<img class="cmp-thumb" src="${e.thumb}" alt="">` : "")],
     [L.product, (e) => `<strong>${esc(e.result.product?.name)}</strong><div class="muted small">${esc(e.result.product?.brand)}</div>`],
+    [L.scoreTitle, (e) => {
+      const sc = computeScore(e.result);
+      return sc.score === null ? `<span class="muted">—</span>` : `<span class="h-score big grade-${sc.grade}">${sc.score}<small>${sc.grade}</small></span>`;
+    }],
     [L.overall, (e) => badgeHtml(L, e.result.overall?.level)],
     [L.labelType, (e) => esc(L.labelTypes[e.result.food_label?.type] ?? L.categories[e.result.product?.category] ?? "—")],
     [L.supply, (e) => {

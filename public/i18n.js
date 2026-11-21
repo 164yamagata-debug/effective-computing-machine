@@ -1,5 +1,9 @@
 export const I18N = {
   ja: {
+    scoreTitle: "ミエールスコア", scoreNone: "成分表が写っていないため、点数を付けられません。裏面の写真を追加してください。",
+    gradeDesc: { A: "気になる成分はほとんどありません", B: "少し気になる成分があります", C: "注意したい成分があります", D: "要注意の成分が含まれます", E: "使用を避けたい成分が含まれます" },
+    noDeductions: "減点はありません。", claims: "表示・宣伝文句の問題", scoreHow: "点数の計算方法",
+    scoreHowText: "100点から、成分ごとに減点します（危険 −40、要注意 −20、注意 −8、ほぼ問題なし −2、表示の問題 −5）。危険な成分が1つでもあれば最大20点、要注意なら最大50点です。AIに点数を付けさせず、毎回同じ式で計算しています。薬との飲み合わせやアレルギーは人によって違うため、点数には含めていません。",
     tabScan: "調べる", tabHistory: "履歴・比較",
     savedNote: "この結果は「履歴・比較」に保存しました。", toHistory: "履歴・比較を見る",
     selectHint: "比較したい商品を2〜4個選んでください。タップすると結果を見られます。",
@@ -36,6 +40,10 @@ export const I18N = {
     },
   },
   en: {
+    scoreTitle: "Mieru score", scoreNone: "No ingredient list in the photos, so no score. Add a photo of the back label.",
+    gradeDesc: { A: "Few or no ingredients of concern", B: "A few minor concerns", C: "Some ingredients to watch", D: "Contains ingredients that need care", E: "Contains ingredients best avoided" },
+    noDeductions: "No deductions.", claims: "Problematic claims", scoreHow: "How the score works",
+    scoreHowText: "Starts at 100 and deducts per ingredient (danger −40, warning −20, caution −8, minor −2, problematic claims −5). Any danger ingredient caps the score at 20, any warning at 50. The AI does not pick the number; the same formula is applied every time. Interactions and allergies depend on the person, so they are not included.",
     tabScan: "Check", tabHistory: "History & compare",
     savedNote: "Saved to History & compare.", toHistory: "Open History & compare",
     selectHint: "Select 2-4 products to compare. Tap one to see its result.",
@@ -72,6 +80,10 @@ export const I18N = {
     },
   },
   zh: {
+    scoreTitle: "Mieru评分", scoreNone: "照片中没有成分表，无法评分。请补拍背面。",
+    gradeDesc: { A: "几乎没有需要担心的成分", B: "有少量需留意的成分", C: "含有需注意的成分", D: "含有需警惕的成分", E: "含有最好避免的成分" },
+    noDeductions: "没有扣分。", claims: "标示・宣传语的问题", scoreHow: "评分方法",
+    scoreHowText: "从100分开始按成分扣分（危险−40、需警惕−20、注意−8、基本无问题−2、标示问题−5）。只要有1种危险成分最高20分，有需警惕成分最高50分。分数不由AI决定，每次用同一公式计算。药物相互作用和过敏因人而异，不计入分数。",
     tabScan: "检查", tabHistory: "历史与比较",
     savedNote: "已保存到“历史与比较”。", toHistory: "查看历史与比较",
     selectHint: "请选择2～4个要比较的商品。点击可查看结果。",
@@ -108,6 +120,10 @@ export const I18N = {
     },
   },
   ko: {
+    scoreTitle: "미에루 점수", scoreNone: "사진에 성분표가 없어 점수를 매길 수 없습니다. 뒷면 사진을 추가하세요.",
+    gradeDesc: { A: "신경 쓰이는 성분이 거의 없습니다", B: "조금 신경 쓰이는 성분이 있습니다", C: "주의할 성분이 있습니다", D: "요주의 성분이 포함되어 있습니다", E: "피하는 것이 좋은 성분이 포함되어 있습니다" },
+    noDeductions: "감점이 없습니다.", claims: "표시·광고 문구 문제", scoreHow: "점수 계산 방법",
+    scoreHowText: "100점에서 성분별로 감점합니다(위험 −40, 요주의 −20, 주의 −8, 거의 문제 없음 −2, 표시 문제 −5). 위험 성분이 하나라도 있으면 최대 20점, 요주의 성분이 있으면 최대 50점입니다. 점수는 AI가 정하지 않고 매번 같은 공식으로 계산합니다. 약물 상호작용과 알레르기는 사람마다 다르므로 점수에 포함하지 않습니다.",
     tabScan: "확인하기", tabHistory: "기록·비교",
     savedNote: "이 결과를 '기록·비교'에 저장했습니다.", toHistory: "기록·비교 보기",
     selectHint: "비교할 상품을 2~4개 선택하세요. 탭하면 결과를 볼 수 있습니다.",

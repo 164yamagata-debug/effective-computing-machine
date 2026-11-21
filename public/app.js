@@ -1,6 +1,7 @@
 import { I18N } from "./i18n.js";
 import { loadHistory, addHistory, updateHistory, removeHistory } from "./store.js";
 import { esc, renderCompareTable, renderAiCompare, pricePerDay } from "./compare.js";
+import { computeScore } from "./score.js";
 
 const MAX_SIDE = 1568; // longest edge sent to the server; keeps uploads small but text legible
 const photos = [null, null, null, null];
@@ -164,6 +165,7 @@ function renderResult(r, { saved = false } = {}) {
     : "";
 
   $("#result").innerHTML = `
+    ${scoreCard(r, L)}
     <section class="card overall lv-bg-${esc(r.overall.level)}">
       <div class="overall-head"><span>${esc(L.overall)}</span>${badge(r.overall.level)}</div>
       <h2 class="product-name">${esc(p.name)}</h2>
@@ -201,6 +203,34 @@ function reset() {
   $("#result").hidden = true;
   $("#capture").hidden = false;
   document.querySelectorAll(".slot .remove").forEach((b) => b.hidden || b.click());
+}
+
+// ---------- score ----------
+export function scoreRing(sc, size = 88) {
+  const r = 40, c = 2 * Math.PI * r;
+  const val = sc.score ?? 0;
+  return `<svg class="ring grade-${sc.grade ?? "none"}" viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
+    <circle cx="50" cy="50" r="${r}" class="ring-bg"/>
+    <circle cx="50" cy="50" r="${r}" class="ring-fg" stroke-dasharray="${(c * val) / 100} ${c}" transform="rotate(-90 50 50)"/>
+    <text x="50" y="50" class="ring-num">${sc.score ?? "—"}</text>
+    <text x="50" y="70" class="ring-grade">${sc.grade ?? ""}</text></svg>`;
+}
+
+function scoreCard(r, L) {
+  const sc = computeScore(r);
+  const reasons = sc.deductions
+    .slice(0, 6)
+    .map((d) => `<li>${badge(d.level)} ${esc(d.label === "claims" ? L.claims : d.label)} <span class="minus">−${d.points}</span></li>`)
+    .join("");
+  return `<section class="card score-card">
+    ${scoreRing(sc)}
+    <div class="score-text">
+      <div class="score-title">${esc(L.scoreTitle)}</div>
+      <div class="score-desc">${esc(sc.score === null ? L.scoreNone : L.gradeDesc[sc.grade])}</div>
+      ${reasons ? `<ul class="deductions">${reasons}</ul>` : sc.score === 100 ? `<p class="small muted">${esc(L.noDeductions)}</p>` : ""}
+      <details class="small muted"><summary>${esc(L.scoreHow)}</summary><p>${esc(L.scoreHowText)}</p></details>
+    </div>
+  </section>`;
 }
 
 // ---------- thumbnails ----------
@@ -259,7 +289,7 @@ function renderHistory() {
         <button type="button" class="h-open" data-open="${esc(e.id)}">
           ${e.thumb ? `<img src="${e.thumb}" alt="">` : `<span class="h-noimg"></span>`}
           <span class="h-text"><span class="h-name">${esc(r.product?.name)}</span>
-          <span class="h-meta">${badge(r.overall?.level)} ${esc(L.categories[r.product?.category] ?? "")} · ${esc(date)}${ppd ? ` · ¥${ppd}/${esc(L.perDay)}` : ""}</span></span>
+          <span class="h-meta">${(() => { const sc = computeScore(r); return sc.score === null ? "" : `<span class="h-score grade-${sc.grade}">${sc.score}<small>${sc.grade}</small></span>`; })()} ${badge(r.overall?.level)} ${esc(L.categories[r.product?.category] ?? "")} · ${esc(date)}${ppd ? ` · ¥${ppd}/${esc(L.perDay)}` : ""}</span></span>
         </button>
         <button type="button" class="h-del" data-del="${esc(e.id)}" aria-label="${esc(L.remove)}">×</button>
       </li>`;
