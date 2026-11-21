@@ -39,3 +39,13 @@ test("problematic claims cost 5 points", () => {
 test("a 'no problem found' comment on claims costs nothing", () => {
   assert.equal(computeScore(base([ing("safe")], { claims_problem: false, claims_check: "No problematic claims found." })).score, 100);
 });
+
+test("allergen ingredients do not lower the score", () => {
+  const r = computeScore(base([ing("caution", "Whey protein"), ing("safe", "water")], { allergens: [{ name: "Milk", kind: "mandatory", source: "Whey protein" }] }));
+  assert.equal(r.score, 100);
+});
+
+test("an allergen that is also a serious ingredient still counts", () => {
+  const r = computeScore(base([ing("warning", "Shrimp extract")], { allergens: [{ name: "Shrimp", kind: "mandatory", source: "Shrimp extract" }] }));
+  assert.equal(r.score, 50);
+});

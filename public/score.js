@@ -29,6 +29,7 @@ export function computeScore(result) {
     if (RANK[h.level] > RANK[ruleLevel.get(h.matched) ?? "safe"]) ruleLevel.set(h.matched, h.level);
   }
   const matchedTexts = new Set();
+  const allergenSources = new Set((result.allergens ?? []).map((a) => a.source).filter(Boolean));
 
   const deductions = [];
   let worst = "safe";
@@ -41,6 +42,9 @@ export function computeScore(result) {
         if (RANK[r] > RANK[level]) level = r;
       }
     }
+    // Allergens matter only to people with that allergy; they are shown in the allergen
+    // section instead of lowering everyone's score (unless a rule made them serious).
+    if (allergenSources.has(i.original) && (level === "caution" || level === "low")) continue;
     if (RANK[level] > RANK[worst]) worst = level;
     if (PENALTY[level]) deductions.push({ label: i.name || i.original, level, points: PENALTY[level] });
   }
