@@ -1,6 +1,7 @@
 import express from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { analyze, isDemo, BACKEND } from "./lib/analyze.js";
+import { compare } from "./lib/compare.js";
 
 const app = express();
 app.use(express.json({ limit: "25mb" }));
@@ -26,27 +27,43 @@ app.post("/api/analyze", async (req, res) => {
   try {
     res.json(await analyze(images, lang));
   } catch (err) {
-    if (["timeout", "cli_missing", "cli_failed"].includes(err.code)) {
-      return res.status(502).json({ error: err.code });
-    }
-    if (err.code === "refusal" || err.code === "incomplete") {
-      return res.status(422).json({ error: err.code });
-    }
-    if (err instanceof Anthropic.RateLimitError) {
-      return res.status(429).json({ error: "rate_limited" });
-    }
-    if (err instanceof Anthropic.AuthenticationError) {
-      console.error("Authentication failed: check ANTHROPIC_API_KEY");
-      return res.status(500).json({ error: "server_auth" });
-    }
-    if (err instanceof Anthropic.APIError) {
-      console.error(`Claude API error ${err.status}:`, err.message);
-      return res.status(502).json({ error: "upstream" });
-    }
-    console.error(err);
-    res.status(500).json({ error: "internal" });
+    sendError(res, err);
   }
 });
+
+app.post("/api/compare", async (req, res) => {
+  const { items, goal = "", lang = "ja" } = req.body ?? {};
+  if (!Array.isArray(items) || items.length < 2 || items.length > 4 || items.some((i) => !i?.result?.product)) {
+    return res.status(400).json({ error: "bad_compare" });
+  }
+  try {
+    res.json(await compare(items, String(goal).slice(0, 200), lang));
+  } catch (err) {
+    sendError(res, err);
+  }
+});
+
+function sendError(res, err) {
+  if (["timeout", "cli_missing", "cli_failed"].includes(err.code)) {
+    return res.status(502).json({ error: err.code });
+  }
+  if (err.code === "refusal" || err.code === "incomplete") {
+    return res.status(422).json({ error: err.code });
+  }
+  if (err instanceof Anthropic.RateLimitError) {
+    return res.status(429).json({ error: "rate_limited" });
+  }
+  if (err instanceof Anthropic.AuthenticationError) {
+    console.error("Authentication failed: check ANTHROPIC_API_KEY");
+    return res.status(500).json({ error: "server_auth" });
+  }
+  if (err instanceof Anthropic.APIError) {
+    console.error(`Claude API error ${err.status}:`, err.message);
+    return res.status(502).json({ error: "upstream" });
+  }
+  console.error(err);
+  res.status(500).json({ error: "internal" });
+}
 
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {

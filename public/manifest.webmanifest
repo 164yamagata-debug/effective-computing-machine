@@ -1,7 +1,7 @@
 {
   "name": "ミエール Mieru",
   "short_name": "ミエール",
-  "description": "パッケージを撮るだけで、成分と注意点がわかる",
+  "description": "化粧品・サプリ・健康食品のパッケージを撮るだけで、成分と注意点がわかる",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f6f7f5",

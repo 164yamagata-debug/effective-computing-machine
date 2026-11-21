@@ -29,6 +29,11 @@
     </select>
   </header>
 
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab active" data-tab="scan" role="tab" data-i18n="tabScan"></button>
+    <button type="button" class="tab" data-tab="history" role="tab"><span data-i18n="tabHistory"></span> <span id="history-count" class="count"></span></button>
+  </nav>
+
   <main>
     <div id="demo-banner" class="banner" hidden data-i18n="demo"></div>
 
@@ -74,6 +79,28 @@
     </section>
 
     <section id="result" hidden></section>
+
+    <section id="history" hidden>
+      <p class="hint" data-i18n="selectHint"></p>
+      <ul id="history-list" class="history"></ul>
+      <p id="history-empty" class="empty" data-i18n="historyEmpty" hidden></p>
+      <div class="sticky-bar"><button id="compare-btn" class="cta" type="button" disabled></button></div>
+    </section>
+
+    <section id="compare" hidden>
+      <button type="button" class="link-btn" id="back-history" data-i18n="backToHistory"></button>
+      <h2 class="view-title" data-i18n="compareTitle"></h2>
+      <p class="hint" data-i18n="compareHint"></p>
+      <div id="compare-table"></div>
+      <section class="card ai-box">
+        <h2 data-i18n="aiCompare"></h2>
+        <input id="goal" type="text" maxlength="200" data-i18n-placeholder="goalPlaceholder">
+        <button id="ai-compare-btn" class="cta" type="button" data-i18n="aiCompareBtn"></button>
+        <p id="compare-error" class="error" role="alert" hidden></p>
+      </section>
+      <div id="ai-loading" hidden><div class="spinner" aria-hidden="true"></div><p data-i18n="aiComparing"></p></div>
+      <div id="ai-result"></div>
+    </section>
   </main>
 
   <script type="module" src="app.js"></script>
