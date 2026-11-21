@@ -252,11 +252,21 @@ function thumbnail(img, side = 240) {
 
 // ---------- tabs ----------
 function showTab(tab) {
+  // "compare" opens the last comparison, or the history list to pick products first.
+  if (tab === "compare") {
+    // Use the products checked in the history list, if any.
+    if (selected.size >= 2 && [...selected].join() !== compareIds.join()) {
+      compareIds = [...selected];
+      $("#ai-result").innerHTML = "";
+      $("#compare-error").hidden = true;
+    }
+    if (compareEntries().length < 2) tab = "history";
+    else renderCompare();
+  }
   document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-  const scanning = tab === "scan";
   $("#history").hidden = tab !== "history";
   $("#compare").hidden = tab !== "compare";
-  if (scanning) {
+  if (tab === "scan") {
     const hasResult = lastResult && $("#result").innerHTML;
     $("#result").hidden = !hasResult;
     $("#capture").hidden = Boolean(hasResult);
@@ -265,10 +275,15 @@ function showTab(tab) {
     $("#result").hidden = true;
     $("#loading").hidden = true;
   }
-  document.querySelector(".tab[data-tab='history']").classList.toggle("active", tab === "history" || tab === "compare");
   window.scrollTo({ top: 0 });
 }
-document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+document.querySelectorAll(".tab").forEach((b) =>
+  b.addEventListener("click", () => {
+    // Tapping Scan while a result is shown starts a new scan.
+    if (b.dataset.tab === "scan" && !$("#result").hidden) reset();
+    showTab(b.dataset.tab);
+  })
+);
 
 // ---------- history ----------
 const selected = new Set();
@@ -284,14 +299,32 @@ function renderHistory() {
       const r = e.result;
       const date = new Date(e.date).toLocaleDateString(lang, { month: "short", day: "numeric" });
       const ppd = pricePerDay(e);
-      return `<li class="h-item ${selected.has(e.id) ? "selected" : ""}">
-        <label class="h-check"><input type="checkbox" data-id="${esc(e.id)}" ${selected.has(e.id) ? "checked" : ""} aria-label="${esc(r.product?.name)}"></label>
+      const sc = computeScore(r);
+      const serious = (r.ingredients ?? []).filter((i) => ["caution", "warning", "danger"].includes(i.level)).length;
+      const alerts = [
+        [serious, L.alertIngredients, "alert-ing"],
+        [r.allergens?.length ?? 0, L.allergens, "alert-allergy"],
+        [r.interactions?.length ?? 0, L.alertInteractions, "alert-drug"],
+      ].filter(([n]) => n > 0);
+      const isSel = selected.has(e.id);
+      return `<li class="h-card ${isSel ? "selected" : ""}">
         <button type="button" class="h-open" data-open="${esc(e.id)}">
           ${e.thumb ? `<img src="${e.thumb}" alt="">` : `<span class="h-noimg"></span>`}
-          <span class="h-text"><span class="h-name">${esc(r.product?.name)}</span>
-          <span class="h-meta">${(() => { const sc = computeScore(r); return sc.score === null ? "" : `<span class="h-score grade-${sc.grade}">${sc.score}<small>${sc.grade}</small></span>`; })()} ${badge(r.overall?.level)} ${esc(L.categories[r.product?.category] ?? "")} · ${esc(date)}${ppd ? ` · ¥${ppd}/${esc(L.perDay)}` : ""}</span></span>
+          <span class="h-body">
+            <span class="h-name">${esc(r.product?.name)}</span>
+            <span class="h-sub">${esc(L.categories[r.product?.category] ?? "")} · ${esc(date)}${ppd ? ` · ¥${ppd}/${esc(L.perDay)}` : ""}</span>
+            <span class="h-alerts">${
+              alerts.length
+                ? alerts.map(([n, label, cls]) => `<span class="alert-pill ${cls}">${esc(label)} ${n}</span>`).join("")
+                : `<span class="alert-pill alert-none">${esc(L.noAlerts)}</span>`
+            }</span>
+          </span>
+          <span class="h-scorebox grade-${sc.grade ?? "none"}">${sc.score ?? "—"}<small>${sc.grade ?? ""}</small></span>
         </button>
-        <button type="button" class="h-del" data-del="${esc(e.id)}" aria-label="${esc(L.remove)}">×</button>
+        <div class="h-actions">
+          <label class="h-check"><input type="checkbox" data-id="${esc(e.id)}" ${isSel ? "checked" : ""}> ${esc(L.addCompare)}</label>
+          <button type="button" class="h-del" data-del="${esc(e.id)}">${esc(L.remove)}</button>
+        </div>
       </li>`;
     })
     .join("");
