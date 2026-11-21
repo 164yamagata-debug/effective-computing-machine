@@ -51,7 +51,8 @@ export function computeScore(result) {
       if (RANK[h.level] > RANK[worst]) worst = h.level;
     }
   }
-  if (result.claims_check) deductions.push({ label: "claims", level: "caution", points: 5 });
+  // Only an explicit "problem found" counts; a comment saying "no problem" must not cost points.
+  if (result.claims_problem === true) deductions.push({ label: "claims", level: "caution", points: 5 });
 
   let score = 100 - deductions.reduce((sum, d) => sum + d.points, 0);
   if (CAP[worst] !== undefined) score = Math.min(score, CAP[worst]);

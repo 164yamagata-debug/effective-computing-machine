@@ -33,5 +33,9 @@ test("no ingredient list gives no score", () => {
 });
 
 test("problematic claims cost 5 points", () => {
-  assert.equal(computeScore(base([ing("safe")], { claims_check: "cures disease" })).score, 95);
+  assert.equal(computeScore(base([ing("safe")], { claims_problem: true, claims_check: "cures disease" })).score, 95);
+});
+
+test("a 'no problem found' comment on claims costs nothing", () => {
+  assert.equal(computeScore(base([ing("safe")], { claims_problem: false, claims_check: "No problematic claims found." })).score, 100);
 });
