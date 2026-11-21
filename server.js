@@ -1,4 +1,5 @@
 import express from "express";
+import os from "node:os";
 import Anthropic from "@anthropic-ai/sdk";
 import { analyze, isDemo, BACKEND } from "./lib/analyze.js";
 import { compare } from "./lib/compare.js";
@@ -69,4 +70,10 @@ const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {
   const mode = isDemo() ? "demo" : BACKEND === "cli" ? "claude -p (subscription)" : "API key";
   console.log(`Mieru: http://localhost:${port}  [${mode}]`);
+  // Show the address to open on a phone connected to the same Wi-Fi.
+  const lan = Object.values(os.networkInterfaces())
+    .flat()
+    .filter((a) => a && a.family === "IPv4" && !a.internal)
+    .map((a) => `http://${a.address}:${port}`);
+  if (lan.length) console.log(`iPhone / スマホ（同じWi-Fi）: ${lan.join("  ")}`);
 });
