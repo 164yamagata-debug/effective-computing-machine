@@ -1,5 +1,6 @@
 import { I18N } from "./i18n.js";
-import { loadHistory, addHistory, updateHistory, removeHistory } from "./store.js";
+import { loadHistory, addHistory, updateHistory, removeHistory, onHistoryChange } from "./store.js";
+import { api } from "./api.js";
 import { esc, renderCompareTable, renderAiCompare, pricePerDay } from "./compare.js";
 import { computeScore } from "./score.js";
 
@@ -91,17 +92,10 @@ $("#analyze").addEventListener("click", async () => {
   $("#capture").hidden = true;
   $("#loading").hidden = false;
   try {
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ images, lang }),
-    });
-    const body = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(body.error || "default");
+    const body = await api.analyze(images, lang);
     lastResult = body;
-    addHistory(body, await thumbnail(images[0]).catch(() => ""));
     renderResult(body, { saved: true });
-    renderHistory();
+    addHistory(body, await thumbnail(images[0]).catch(() => ""));
   } catch (err) {
     $("#capture").hidden = false;
     showError(t().errors[err.message] || t().errors.default);
@@ -348,9 +342,8 @@ $("#history-list").addEventListener("click", (e) => {
   const open = e.target.closest("[data-open]")?.dataset.open;
   const del = e.target.closest("[data-del]")?.dataset.del;
   if (del) {
-    removeHistory(del);
     selected.delete(del);
-    renderHistory();
+    removeHistory(del);
   } else if (open) {
     const entry = loadHistory().find((x) => x.id === open);
     if (!entry) return;
@@ -388,7 +381,6 @@ $("#compare-table").addEventListener("input", (e) => {
   const entry = loadHistory().find((x) => x.id === id);
   const ppd = entry && pricePerDay(entry);
   document.querySelector(`[data-ppd="${CSS.escape(id)}"]`).textContent = ppd ? `${t().perDay} ¥${ppd.toLocaleString()}` : "";
-  renderHistory();
 });
 
 $("#ai-compare-btn").addEventListener("click", async () => {
@@ -398,13 +390,7 @@ $("#ai-compare-btn").addEventListener("click", async () => {
   $("#ai-loading").hidden = false;
   $("#ai-compare-btn").disabled = true;
   try {
-    const res = await fetch("/api/compare", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: entries.map((e) => ({ result: e.result, price: Number(e.price) || 0 })), goal: $("#goal").value, lang }),
-    });
-    const body = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(body.error || "default");
+    const body = await api.compare(entries.map((e) => ({ result: e.result, price: Number(e.price) || 0 })), $("#goal").value, lang);
     $("#ai-result").innerHTML = renderAiCompare(body, t());
   } catch (err) {
     const el = $("#compare-error");
@@ -417,8 +403,11 @@ $("#ai-compare-btn").addEventListener("click", async () => {
 });
 
 // ---------- init ----------
+onHistoryChange(() => {
+  renderHistory();
+  // Keep the comparison table in sync when history changes elsewhere (another device), but
+  // not while the viewer is typing a price into it.
+  if (!$("#compare").hidden && !document.activeElement?.classList.contains("price")) renderCompare();
+});
 applyLang();
-fetch("/api/status")
-  .then((r) => r.json())
-  .then((s) => ($("#demo-banner").hidden = !s.demo))
-  .catch(() => {});
+api.isDemo().then((demo) => ($("#demo-banner").hidden = !demo));
