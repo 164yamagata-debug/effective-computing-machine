@@ -67,7 +67,17 @@ function sendError(res, err) {
 }
 
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => {
+app.listen(port, (err) => {
+  // Express 5 reports startup errors here instead of throwing, so handle them explicitly.
+  if (err) {
+    if (err.code === "EADDRINUSE") {
+      console.error(`ポート${port}はすでに使われています。別のターミナルでミエールが動いていないか確認し、そちらを control + C で止めてください。`);
+      console.error(`Port ${port} is already in use. Stop the other Mieru window, or start with PORT=${port + 1} npm start.`);
+    } else {
+      console.error("起動できませんでした / Failed to start:", err.message);
+    }
+    process.exit(1);
+  }
   const mode = isDemo() ? "demo" : BACKEND === "cli" ? "claude -p (subscription)" : "API key";
   console.log(`Mieru: http://localhost:${port}  [${mode}]`);
   // Show the address to open on a phone connected to the same Wi-Fi.
