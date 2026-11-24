@@ -36,7 +36,7 @@ export const I18N = {
     conf: { high: "高", medium: "中", low: "低" },
     errors: {
       bad_images: "画像を読み込めませんでした。", refusal: "この画像は解析できませんでした。", incomplete: "解析が途中で終わりました。もう一度お試しください。",
-      rate_limited: "混み合っています。少し待ってからお試しください。", timeout: "時間がかかりすぎました。もう一度お試しください。", cli_missing: "PCにClaude Code（claudeコマンド）が見つかりません。", cli_failed: "Claude Codeでの解析に失敗しました。PCで claude にログインしているか確認してください。", default: "エラーが発生しました。もう一度お試しください。", bad_compare: "比較する商品を2〜4個選んでください。",
+      rate_limited: "混み合っています。少し待ってからお試しください。", timeout: "時間がかかりすぎました。もう一度お試しください。", cli_missing: "PCにClaude Code（claudeコマンド）が見つかりません。", cli_failed: "Claude Codeでの解析に失敗しました。PCで claude にログインしているか確認してください。", default: "エラーが発生しました。もう一度お試しください。", bad_compare: "比較する商品を2〜4個選んでください。", unavailable: "この画面ではAIを使えません。claude.ai にログインして開いてください。", not_granted: "AIの利用が許可されていません。画面上部の権限の設定から許可してください。", invalid_json: "AIの答えを読み取れませんでした。もう一度お試しください。", refused: "この画像は解析できませんでした。別の写真でお試しください。", session_expired: "claude.ai に再ログインしてください。", image_rejected: "この画像は使えません。別の写真を選んでください。", images_unavailable: "この画面では画像を送れません。claude.ai で開いてください。",
     },
   },
   en: {
@@ -76,7 +76,7 @@ export const I18N = {
     conf: { high: "High", medium: "Medium", low: "Low" },
     errors: {
       bad_images: "Could not read the images.", refusal: "This image could not be analysed.", incomplete: "The analysis was cut short. Please try again.",
-      rate_limited: "Busy right now. Please try again shortly.", timeout: "It took too long. Please try again.", cli_missing: "Claude Code (the claude command) was not found on the computer.", cli_failed: "Analysis with Claude Code failed. Check that you are logged in to claude on the computer.", default: "Something went wrong. Please try again.", bad_compare: "Select 2-4 products to compare.",
+      rate_limited: "Busy right now. Please try again shortly.", timeout: "It took too long. Please try again.", cli_missing: "Claude Code (the claude command) was not found on the computer.", cli_failed: "Analysis with Claude Code failed. Check that you are logged in to claude on the computer.", default: "Something went wrong. Please try again.", bad_compare: "Select 2-4 products to compare.", unavailable: "AI is not available here. Open this page on claude.ai while signed in.", not_granted: "AI use is not allowed for this page. Allow it in the page permissions.", invalid_json: "Could not read the AI answer. Please try again.", refused: "This image could not be analysed. Try another photo.", session_expired: "Please sign in to claude.ai again.", image_rejected: "This image cannot be used. Choose another photo.", images_unavailable: "Images cannot be sent from this view. Open the page on claude.ai.",
     },
   },
   zh: {
@@ -116,7 +116,7 @@ export const I18N = {
     conf: { high: "高", medium: "中", low: "低" },
     errors: {
       bad_images: "无法读取图片。", refusal: "无法分析此图片。", incomplete: "分析中断，请重试。",
-      rate_limited: "当前繁忙，请稍后再试。", timeout: "处理超时，请重试。", cli_missing: "电脑上未找到 Claude Code（claude 命令）。", cli_failed: "Claude Code 分析失败，请确认电脑上已登录 claude。", default: "发生错误，请重试。", bad_compare: "请选择2～4个商品进行比较。",
+      rate_limited: "当前繁忙，请稍后再试。", timeout: "处理超时，请重试。", cli_missing: "电脑上未找到 Claude Code（claude 命令）。", cli_failed: "Claude Code 分析失败，请确认电脑上已登录 claude。", default: "发生错误，请重试。", bad_compare: "请选择2～4个商品进行比较。", unavailable: "此处无法使用AI。请登录 claude.ai 后打开。", not_granted: "未允许此页面使用AI，请在页面权限中允许。", invalid_json: "无法读取AI的回答，请重试。", refused: "无法分析此图片，请换一张照片。", session_expired: "请重新登录 claude.ai。", image_rejected: "无法使用此图片，请选择其他照片。", images_unavailable: "此处无法发送图片，请在 claude.ai 中打开。",
     },
   },
   ko: {
@@ -156,7 +156,7 @@ export const I18N = {
     conf: { high: "높음", medium: "보통", low: "낮음" },
     errors: {
       bad_images: "이미지를 읽을 수 없습니다.", refusal: "이 이미지는 분석할 수 없습니다.", incomplete: "분석이 중간에 끝났습니다. 다시 시도해 주세요.",
-      rate_limited: "혼잡합니다. 잠시 후 다시 시도해 주세요.", timeout: "시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.", cli_missing: "PC에서 Claude Code(claude 명령)를 찾을 수 없습니다.", cli_failed: "Claude Code 분석에 실패했습니다. PC에서 claude에 로그인되어 있는지 확인하세요.", default: "오류가 발생했습니다. 다시 시도해 주세요.", bad_compare: "비교할 상품을 2~4개 선택하세요.",
+      rate_limited: "혼잡합니다. 잠시 후 다시 시도해 주세요.", timeout: "시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.", cli_missing: "PC에서 Claude Code(claude 명령)를 찾을 수 없습니다.", cli_failed: "Claude Code 분석에 실패했습니다. PC에서 claude에 로그인되어 있는지 확인하세요.", default: "오류가 발생했습니다. 다시 시도해 주세요.", bad_compare: "비교할 상품을 2~4개 선택하세요.", unavailable: "여기서는 AI를 사용할 수 없습니다. claude.ai에 로그인하여 여세요.", not_granted: "이 페이지의 AI 사용이 허용되지 않았습니다. 페이지 권한에서 허용하세요.", invalid_json: "AI 답변을 읽지 못했습니다. 다시 시도해 주세요.", refused: "이 이미지는 분석할 수 없습니다. 다른 사진으로 시도해 주세요.", session_expired: "claude.ai에 다시 로그인하세요.", image_rejected: "이 이미지는 사용할 수 없습니다. 다른 사진을 선택하세요.", images_unavailable: "여기서는 이미지를 보낼 수 없습니다. claude.ai에서 여세요.",
     },
   },
 };

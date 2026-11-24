@@ -1,0 +1,1740 @@
+<title>ミエール Mieru</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root {
+  --bg: #f6f7f5;
+  --card: #ffffff;
+  --text: #1c2321;
+  --muted: #5d6b67;
+  --line: #e2e6e3;
+  --accent: #0f766e;
+  --accent-ink: #ffffff;
+  --safe: #15803d;
+  --low: #4d7c0f;
+  --caution: #b45309;
+  --warning: #c2410c;
+  --danger: #b91c1c;
+  --unknown: #6b7280;
+  --on-level: #ffffff; /* text on a level-colored badge */
+  color-scheme: light;
+}
+/* Dark palette: follows the system setting unless claude.ai's theme is set explicitly. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111615;
+    --card: #1a201f;
+    --text: #e8eeec;
+    --muted: #9aa8a4;
+    --line: #2c3533;
+    --accent: #2dd4bf;
+    --accent-ink: #062a26;
+    --safe: #4ade80;
+    --low: #a3e635;
+    --caution: #fbbf24;
+    --warning: #fb923c;
+    --danger: #f87171;
+    --unknown: #9ca3af;
+    --on-level: #0b1110;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111615;
+  --card: #1a201f;
+  --text: #e8eeec;
+  --muted: #9aa8a4;
+  --line: #2c3533;
+  --accent: #2dd4bf;
+  --accent-ink: #062a26;
+  --safe: #4ade80;
+  --low: #a3e635;
+  --caution: #fbbf24;
+  --warning: #fb923c;
+  --danger: #f87171;
+  --unknown: #9ca3af;
+  --on-level: #0b1110;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Noto Sans SC", "Noto Sans KR", sans-serif;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+main {
+  max-width: 640px; margin: 0 auto; padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  max-width: 640px; margin: 0 auto; padding-block: 16px 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.logo { width: 40px; height: 40px; border-radius: 10px; flex: none; }
+.latin { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; margin-left: 4px; }
+h1 { font-size: 20px; margin: 0; letter-spacing: 0.02em; }
+.tagline { margin: 0; font-size: 12px; color: var(--muted); }
+#lang {
+  font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--card); color: var(--text);
+}
+
+.banner {
+  background: color-mix(in srgb, var(--caution) 14%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--caution) 40%, transparent);
+  border-radius: 10px; padding: 10px 12px; font-size: 13px; margin: 8px 0 12px;
+}
+
+.slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.slot {
+  position: relative; display: flex; flex-direction: column; aspect-ratio: 3 / 4;
+  border: 2px dashed var(--line); border-radius: 14px; background: var(--card);
+  overflow: hidden; cursor: pointer;
+}
+.slot.primary { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+.slot-title {
+  position: absolute; top: 8px; left: 8px; z-index: 2; font-size: 12px; font-weight: 600;
+  background: color-mix(in srgb, var(--card) 85%, transparent); padding: 2px 8px; border-radius: 999px;
+}
+.slot-empty {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 13px; gap: 4px; padding: 8px; text-align: center;
+}
+.plus { font-size: 28px; color: var(--accent); }
+.slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.slot.filled { border-style: solid; }
+.slot.filled .slot-empty { visibility: hidden; }
+.remove {
+  position: absolute; top: 6px; right: 6px; z-index: 2; width: 32px; height: 32px; border-radius: 50%;
+  border: none; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 18px; cursor: pointer;
+}
+.hint { font-size: 13px; color: var(--muted); margin: 12px 0; }
+
+.cta {
+  display: block; width: 100%; font: inherit; font-weight: 700; font-size: 17px;
+  padding: 14px; border: none; border-radius: 12px; background: var(--accent); color: var(--accent-ink);
+  cursor: pointer; margin-top: 8px;
+}
+.cta:active { transform: translateY(1px); }
+.error { color: var(--danger); font-size: 14px; }
+
+#loading { text-align: center; padding: 64px 0; color: var(--muted); }
+.spinner {
+  width: 40px; height: 40px; margin: 0 auto 16px; border-radius: 50%;
+  border: 4px solid var(--line); border-top-color: var(--accent); animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px; margin: 12px 0;
+}
+.card h2 { font-size: 16px; margin: 0 0 8px; }
+.card p { margin: 6px 0; }
+.overall { border-width: 2px; }
+.overall-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+.overall .product-name { font-size: 18px; margin: 6px 0; word-break: break-word; }
+.meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; margin: 10px 0 0; }
+.meta dt { color: var(--muted); }
+.meta dd { margin: 0; word-break: break-word; }
+
+.badge {
+  display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px;
+  color: var(--on-level); white-space: nowrap; vertical-align: middle;
+}
+.lv-safe { background: var(--safe); }
+.lv-low { background: var(--low); }
+.lv-caution { background: var(--caution); }
+.lv-warning { background: var(--warning); }
+.lv-danger { background: var(--danger); }
+.lv-unknown { background: var(--unknown); }
+
+.lv-bg-safe { border-color: var(--safe); }
+.lv-bg-low { border-color: var(--low); }
+.lv-bg-caution { border-color: var(--caution); }
+.lv-bg-warning { border-color: var(--warning); }
+.lv-bg-danger { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 7%, var(--card)); }
+.lv-bg-unknown { border-color: var(--unknown); }
+
+.flags { list-style: none; margin: 0; padding: 0; }
+.flags li { padding: 10px 0; border-top: 1px solid var(--line); }
+.flags li:first-child { border-top: none; padding-top: 0; }
+.flags p { margin: 4px 0 0; font-size: 14px; }
+.who { font-size: 12px; color: var(--muted); }
+
+.ingredients { list-style: none; margin: 0; padding: 0; }
+.ing { padding: 10px 0 10px 12px; border-top: 1px solid var(--line); border-left: 3px solid transparent; }
+.ing:first-child { border-top: none; }
+.lv-border-caution { border-left-color: var(--caution); }
+.lv-border-warning { border-left-color: var(--warning); }
+.lv-border-danger { border-left-color: var(--danger); }
+.ing-head { display: flex; align-items: center; gap: 8px; }
+.ing-name { font-weight: 600; flex: 1; min-width: 0; word-break: break-word; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.ing-sub { font-size: 12px; color: var(--muted); word-break: break-word; }
+.ing-purpose { font-size: 13px; }
+.ing-note { font-size: 13px; color: var(--muted); }
+.ing-note.strong { color: var(--warning); }
+
+.disclaimer { font-size: 12px; color: var(--muted); margin: 16px 0; }
+
+.pill {
+  display: inline-block; font-weight: 700; font-size: 14px; padding: 4px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--card)); color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.small { font-size: 13px; }
+.muted { color: var(--muted); }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; flex-direction: column; padding: 6px 12px; border-radius: 10px;
+  border: 1px solid var(--line); font-weight: 600; line-height: 1.3;
+}
+.chip small { font-weight: 400; font-size: 11px; color: var(--muted); }
+.chip-strong { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--card)); }
+
+/* ---------- shared ---------- */
+.count:empty { display: none; }
+.link-btn { font: inherit; font-size: 14px; color: var(--accent); background: none; border: none; padding: 4px 0; cursor: pointer; text-decoration: underline; }
+.saved-note { font-size: 13px; color: var(--muted); }
+.view-title { font-size: 18px; margin: 4px 0; }
+.empty { text-align: center; color: var(--muted); padding: 32px 0; }
+
+/* ---------- history ---------- */
+.history { list-style: none; margin: 0; padding: 0 0 80px; }
+.h-item {
+  display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; padding: 8px; margin-bottom: 8px;
+}
+.h-item.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.h-check { padding: 8px; cursor: pointer; }
+.h-check input { width: 22px; height: 22px; accent-color: var(--accent); }
+.h-open {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; font: inherit; color: inherit;
+  background: none; border: none; padding: 0; text-align: left; cursor: pointer;
+}
+.h-open img, .h-noimg { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex: none; background: var(--line); }
+.h-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.h-name { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.h-meta { font-size: 12px; color: var(--muted); }
+.h-meta .badge { font-size: 11px; padding: 1px 8px; }
+.h-del { width: 36px; height: 36px; flex: none; border: none; border-radius: 50%; background: none; color: var(--muted); font-size: 20px; cursor: pointer; }
+.sticky-bar {
+  position: sticky; bottom: 0; padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 70%, transparent);
+}
+.cta:disabled { opacity: 0.45; cursor: default; }
+
+/* ---------- compare ---------- */
+.cmp-scroll { overflow-x: auto; margin: 0 -16px; padding: 0 16px; -webkit-overflow-scrolling: touch; }
+.cmp { border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 100%; }
+.cmp th, .cmp td { vertical-align: top; padding: 10px; border-bottom: 1px solid var(--line); background: var(--card); }
+.cmp td { min-width: 150px; max-width: 200px; word-break: break-word; }
+.cmp th {
+  position: sticky; left: 0; z-index: 1; text-align: left; font-weight: 600; color: var(--muted);
+  width: 88px; min-width: 88px; max-width: 88px; font-size: 12px; background: var(--bg);
+  box-shadow: 1px 0 0 var(--line);
+}
+.cmp tr:first-child td, .cmp tr:first-child th { border-top: 1px solid var(--line); }
+.cmp-thumb { width: 100%; max-width: 140px; aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
+.cell-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.cell-list .badge { font-size: 10px; padding: 1px 6px; }
+.cell-list .shared { background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 6px; padding: 0 6px; font-weight: 600; }
+.strong-text { font-weight: 700; color: var(--danger); }
+.price {
+  width: 100%; font: inherit; font-size: 15px; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text);
+}
+.ppd { margin-top: 4px; font-weight: 700; color: var(--accent); }
+.ai-box input {
+  width: 100%; font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text);
+}
+#ai-loading { text-align: center; padding: 24px 0; color: var(--muted); }
+
+/* ---------- score ---------- */
+.score-card { display: flex; gap: 16px; align-items: flex-start; }
+.ring { flex: none; }
+.ring-bg { fill: none; stroke: var(--line); stroke-width: 10; }
+.ring-fg { fill: none; stroke-width: 10; stroke-linecap: round; stroke: var(--grade-color, var(--unknown)); }
+.ring-num { text-anchor: middle; dominant-baseline: middle; font-size: 30px; font-weight: 800; fill: var(--text); }
+.ring-grade { text-anchor: middle; font-size: 13px; font-weight: 700; fill: var(--grade-color, var(--muted)); }
+.grade-A { --grade-color: var(--safe); }
+.grade-B { --grade-color: var(--low); }
+.grade-C { --grade-color: var(--caution); }
+.grade-D { --grade-color: var(--warning); }
+.grade-E { --grade-color: var(--danger); }
+.score-text { flex: 1; min-width: 0; }
+.score-title { font-size: 13px; color: var(--muted); }
+.score-desc { font-weight: 700; margin: 2px 0 6px; }
+.deductions { list-style: none; margin: 0 0 6px; padding: 0; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.deductions .badge { font-size: 10px; padding: 1px 6px; }
+.minus { color: var(--muted); font-variant-numeric: tabular-nums; }
+details summary { cursor: pointer; }
+.h-score {
+  display: inline-flex; align-items: baseline; gap: 2px; font-weight: 800; font-size: 13px;
+  color: var(--grade-color); border: 1.5px solid var(--grade-color); border-radius: 8px; padding: 0 6px;
+}
+.h-score small { font-size: 10px; font-weight: 700; }
+.h-score.big { font-size: 22px; padding: 2px 10px; }
+.h-score.big small { font-size: 13px; }
+
+/* ---------- bottom navigation ---------- */
+body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end;
+  padding: 6px max(16px, calc(50% - 300px)) calc(6px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--card) 94%, transparent); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+.nav-item, .nav-scan {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font: inherit; font-size: 11px; font-weight: 600; color: var(--muted);
+  background: none; border: none; padding: 6px 0; cursor: pointer;
+}
+.nav-item.active, .nav-scan.active { color: var(--accent); }
+.nav-item .count {
+  position: absolute; top: 0; left: calc(50% + 8px); min-width: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); font-size: 10px; line-height: 18px;
+}
+.nav-scan { padding: 0 24px; margin-top: -26px; }
+.scan-circle {
+  display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(145deg, #2dd4bf, #0f766e); color: #fff;
+  box-shadow: 0 6px 16px color-mix(in srgb, #0f766e 40%, transparent); border: 4px solid var(--bg);
+}
+.nav-scan.active .scan-circle { box-shadow: 0 6px 20px color-mix(in srgb, #0f766e 60%, transparent); }
+.sticky-bar { bottom: calc(76px + env(safe-area-inset-bottom)); }
+
+/* ---------- history cards ---------- */
+.h-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 12px; overflow: hidden;
+}
+.h-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1.5px var(--accent); }
+.h-card .h-open { display: flex; align-items: flex-start; gap: 12px; padding: 12px; width: 100%; }
+.h-card .h-open img, .h-card .h-noimg { width: 84px; height: 84px; border-radius: 12px; object-fit: cover; flex: none; background: var(--line); }
+.h-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.h-card .h-name { font-size: 15px; font-weight: 700; line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.h-sub { font-size: 12px; color: var(--muted); }
+.h-alerts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.alert-pill {
+  font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; border: 1px solid;
+}
+.alert-ing { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 50%, transparent); }
+.alert-allergy { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+.alert-drug { color: var(--caution); border-color: color-mix(in srgb, var(--caution) 50%, transparent); }
+.alert-none { color: var(--safe); border-color: color-mix(in srgb, var(--safe) 50%, transparent); }
+.h-scorebox {
+  flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 12px; font-size: 22px; font-weight: 800; line-height: 1;
+  color: var(--on-level); background: var(--grade-color, var(--unknown));
+}
+.h-scorebox small { font-size: 11px; font-weight: 700; margin-top: 3px; opacity: 0.9; }
+.h-actions {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 12px; border-top: 1px solid var(--line); font-size: 13px;
+}
+.h-actions .h-check { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-weight: 600; }
+.h-actions .h-check input { width: 20px; height: 20px; }
+.h-actions .h-del { width: auto; height: auto; font-size: 12px; padding: 4px 8px; border-radius: 8px; }
+
+</style>
+<header class="top">
+    <div class="brand">
+      <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyZGQ0YmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwZjc2NmUiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJpcmlzIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzRkMzk5Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDQ3ODU3Ii8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTIiIGZpbGw9InVybCgjYmcpIi8+CiAgPHBhdGggZD0iTTU2IDI1NmM1OC05NiAxMjgtMTQ0IDIwMC0xNDRzMTQyIDQ4IDIwMCAxNDRjLTU4IDk2LTEyOCAxNDQtMjAwIDE0NFMxMTQgMzUyIDU2IDI1NnoiIGZpbGw9IiNmZmYiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjEwMCIgZmlsbD0idXJsKCNpcmlzKSIvPgogIDxnIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMjU2IDI2MkwyMDYgMjIyTTI1NiAyNjJMMzA4IDIyNk0yNTYgMjYyTDI3MiAzMjAiLz48L2c+CiAgPGcgZmlsbD0iI2ZmZiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjYyIiByPSIyNCIvPjxjaXJjbGUgY3g9IjIwNiIgY3k9IjIyMiIgcj0iMTciLz48Y2lyY2xlIGN4PSIzMDgiIGN5PSIyMjYiIHI9IjE3Ii8+PGNpcmNsZSBjeD0iMjcyIiBjeT0iMzIwIiByPSIxNyIvPjwvZz4KPC9zdmc+Cg==" alt="" width="40" height="40">
+      <div>
+        <h1>ミエール <span class="latin">Mieru</span></h1>
+        <p class="tagline" data-i18n="tagline"></p>
+      </div>
+    </div>
+    <select id="lang" aria-label="Language">
+      <option value="ja">日本語</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="ko">한국어</option>
+    </select>
+  </header>
+
+
+
+  <main>
+    <div id="demo-banner" class="banner" hidden data-i18n="demo"></div>
+
+    <section id="capture">
+      <div class="slots">
+        <label class="slot" data-slot="0">
+          <input type="file" accept="image/*" capture="environment" hidden>
+          <span class="slot-title" data-i18n="front"></span>
+          <span class="slot-empty"><span class="plus">＋</span><span data-i18n="addPhoto"></span></span>
+          <img alt="" hidden>
+          <button type="button" class="remove" hidden data-i18n-aria="remove">×</button>
+        </label>
+        <label class="slot primary" data-slot="1">
+          <input type="file" accept="image/*" capture="environment" hidden>
+          <span class="slot-title" data-i18n="back"></span>
+          <span class="slot-empty"><span class="plus">＋</span><span data-i18n="addPhoto"></span></span>
+          <img alt="" hidden>
+          <button type="button" class="remove" hidden data-i18n-aria="remove">×</button>
+        </label>
+        <label class="slot" data-slot="2">
+          <input type="file" accept="image/*" hidden>
+          <span class="slot-title" data-i18n="extra"></span>
+          <span class="slot-empty"><span class="plus">＋</span><span data-i18n="addPhoto"></span></span>
+          <img alt="" hidden>
+          <button type="button" class="remove" hidden data-i18n-aria="remove">×</button>
+        </label>
+        <label class="slot" data-slot="3">
+          <input type="file" accept="image/*" hidden>
+          <span class="slot-title" data-i18n="extra"></span>
+          <span class="slot-empty"><span class="plus">＋</span><span data-i18n="addPhoto"></span></span>
+          <img alt="" hidden>
+          <button type="button" class="remove" hidden data-i18n-aria="remove">×</button>
+        </label>
+      </div>
+      <p class="hint" data-i18n="hint"></p>
+      <button id="analyze" class="cta" type="button" data-i18n="analyze"></button>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+
+    <section id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p data-i18n="analyzing"></p>
+    </section>
+
+    <section id="result" hidden></section>
+
+    <section id="history" hidden>
+      <p class="hint" data-i18n="selectHint"></p>
+      <ul id="history-list" class="history"></ul>
+      <p id="history-empty" class="empty" data-i18n="historyEmpty" hidden></p>
+      <div class="sticky-bar"><button id="compare-btn" class="cta" type="button" disabled></button></div>
+    </section>
+
+    <section id="compare" hidden>
+      <button type="button" class="link-btn" id="back-history" data-i18n="backToHistory"></button>
+      <h2 class="view-title" data-i18n="compareTitle"></h2>
+      <p class="hint" data-i18n="compareHint"></p>
+      <div id="compare-table"></div>
+      <section class="card ai-box">
+        <h2 data-i18n="aiCompare"></h2>
+        <input id="goal" type="text" maxlength="200" data-i18n-placeholder="goalPlaceholder">
+        <button id="ai-compare-btn" class="cta" type="button" data-i18n="aiCompareBtn"></button>
+        <p id="compare-error" class="error" role="alert" hidden></p>
+      </section>
+      <div id="ai-loading" hidden><div class="spinner" aria-hidden="true"></div><p data-i18n="aiComparing"></p></div>
+      <div id="ai-result"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Menu">
+    <button type="button" class="tab nav-item" data-tab="history">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-i18n="tabHistory"></span><span id="history-count" class="count"></span>
+    </button>
+    <button type="button" class="tab nav-scan active" data-tab="scan">
+      <span class="scan-circle"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></span>
+      <span data-i18n="tabScan"></span>
+    </button>
+    <button type="button" class="tab nav-item" data-tab="compare">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="4" width="7" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span data-i18n="tabCompare"></span>
+    </button>
+  </nav>
+<script type="module">
+const PROMPTS = {"analysisSchema":"{\"type\":\"object\",\"properties\":{\"readable\":{\"type\":\"boolean\",\"description\":\"false if the photos do not show a product label that can be analysed\"},\"product\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Product name as printed (original language) plus a translation in the output language if different\"},\"brand\":{\"type\":\"string\"},\"category\":{\"type\":\"string\",\"enum\":[\"skincare\",\"cosmetics\",\"supplement\",\"health_food\",\"food\",\"medicine\",\"other\",\"unknown\"]},\"origin_country\":{\"type\":\"string\",\"description\":\"Country of manufacture or sale, in the output language. 'unknown' equivalent if not shown\"},\"label_languages\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"description\":\"Languages printed on the label, in the output language\"}},\"required\":[\"name\",\"brand\",\"category\",\"origin_country\",\"label_languages\"],\"additionalProperties\":false},\"supply\":{\"type\":\"object\",\"properties\":{\"per_day\":{\"type\":\"string\",\"description\":\"Recommended daily amount as printed, e.g. '2 tablets', or empty\"},\"days\":{\"type\":\"number\",\"description\":\"How many days one package lasts at the recommended amount (e.g. 60 tablets at 2/day = 30). 0 if unknown or not applicable\"}},\"required\":[\"per_day\",\"days\"],\"additionalProperties\":false,\"description\":\"Package size in days, used to compare price per day\"},\"overall\":{\"type\":\"object\",\"properties\":{\"level\":{\"type\":\"string\",\"enum\":[\"safe\",\"low\",\"caution\",\"warning\",\"danger\",\"unknown\"]},\"summary\":{\"type\":\"string\",\"description\":\"2-4 sentence plain-language verdict in the output language\"}},\"required\":[\"level\",\"summary\"],\"additionalProperties\":false},\"food_label\":{\"type\":\"object\",\"properties\":{\"type\":{\"type\":\"string\",\"enum\":[\"tokuho\",\"kinousei\",\"eiyou_kinou\",\"general_health_food\",\"foreign_supplement\",\"not_food\",\"unknown\"],\"description\":\"Japanese regulatory class of a food product: tokuho = 特定保健用食品 (FOSHU, government-approved, 'tokuho' mark); kinousei = 機能性表示食品 (notified to the Consumer Affairs Agency, has a notification number like A123/B123...); eiyou_kinou = 栄養機能食品 (nutrient function claims); general_health_food = いわゆる健康食品 sold in Japan with no approval or notification; foreign_supplement = supplement made for a foreign market; not_food = cosmetics/medicine/etc.; unknown\"},\"notification_number\":{\"type\":\"string\",\"description\":\"機能性表示食品 notification number or トクホ approval info if printed, else empty\"},\"explanation\":{\"type\":\"string\",\"description\":\"What this class means for the consumer, 1-2 sentences, in the output language. Empty for not_food.\"}},\"required\":[\"type\",\"notification_number\",\"explanation\"],\"additionalProperties\":false},\"allergens\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Allergen in the output language\"},\"kind\":{\"type\":\"string\",\"enum\":[\"mandatory\",\"recommended\",\"other\"],\"description\":\"mandatory = one of Japan's 8 特定原材料 (shrimp, crab, walnut, wheat, buckwheat, egg, milk, peanut); recommended = one of the 特定原材料に準ずるもの (e.g. soy, sesame, almond, cashew, salmon, gelatin, apple, banana...); other\"},\"source\":{\"type\":\"string\",\"description\":\"Ingredient on the label that contains it\"}},\"required\":[\"name\",\"kind\",\"source\"],\"additionalProperties\":false},\"description\":\"Food allergens found in the ingredients or allergen statement. Empty for non-food products unless clearly relevant.\"},\"intake\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"nutrient\":{\"type\":\"string\"},\"amount\":{\"type\":\"string\",\"description\":\"Amount per recommended daily serving as printed, with unit\"},\"level\":{\"type\":\"string\",\"enum\":[\"safe\",\"low\",\"caution\",\"warning\",\"danger\",\"unknown\"]},\"detail\":{\"type\":\"string\",\"description\":\"Compare with Japanese Dietary Reference Intakes (日本人の食事摂取基準) upper limit / recommended amount where one exists; mention risk of combining with other supplements\"}},\"required\":[\"nutrient\",\"amount\",\"level\",\"detail\"],\"additionalProperties\":false},\"description\":\"Vitamins, minerals and other nutrients where the daily amount matters (excess risk). Empty if not applicable.\"},\"interactions\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"substance\":{\"type\":\"string\",\"description\":\"Ingredient in this product\"},\"with_what\":{\"type\":\"string\",\"description\":\"Medicine or condition it interacts with\"},\"level\":{\"type\":\"string\",\"enum\":[\"safe\",\"low\",\"caution\",\"warning\",\"danger\",\"unknown\"]},\"detail\":{\"type\":\"string\"}},\"required\":[\"substance\",\"with_what\",\"level\",\"detail\"],\"additionalProperties\":false},\"description\":\"Known interactions with medicines (e.g. warfarin, antidepressants, oral contraceptives, immunosuppressants, diabetes or blood-pressure drugs). Empty if none known.\"},\"ingredients\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"original\":{\"type\":\"string\",\"description\":\"Ingredient exactly as printed on the label\"},\"english\":{\"type\":\"string\",\"description\":\"INCI or standard English name\"},\"name\":{\"type\":\"string\",\"description\":\"Name in the output language\"},\"purpose\":{\"type\":\"string\",\"description\":\"What it is for, short, in the output language\"},\"level\":{\"type\":\"string\",\"enum\":[\"safe\",\"low\",\"caution\",\"warning\",\"danger\",\"unknown\"]},\"note\":{\"type\":\"string\",\"description\":\"Why it matters, or empty string\"}},\"required\":[\"original\",\"english\",\"name\",\"purpose\",\"level\",\"note\"],\"additionalProperties\":false},\"description\":\"Every ingredient that can be read, in label order\"},\"japan_notes\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"level\":{\"type\":\"string\",\"enum\":[\"safe\",\"low\",\"caution\",\"warning\",\"danger\",\"unknown\"]},\"detail\":{\"type\":\"string\"}},\"required\":[\"title\",\"level\",\"detail\"],\"additionalProperties\":false},\"description\":\"Points that matter under Japanese rules: ingredients prohibited or treated as medicines in Japan, personal import limits, etc. Empty if none.\"},\"cautions\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"who\":{\"type\":\"string\",\"description\":\"Who should be careful (e.g. pregnant, sensitive skin, people on blood thinners), or empty\"},\"detail\":{\"type\":\"string\"}},\"required\":[\"title\",\"who\",\"detail\"],\"additionalProperties\":false},\"description\":\"Allergens, interactions, pregnancy, overdose, etc.\"},\"claims_problem\":{\"type\":\"boolean\",\"description\":\"true only if the package has at least one claim that is not allowed in Japan or is clearly misleading; false if no such claim was found\"},\"claims_check\":{\"type\":\"string\",\"description\":\"Comment on marketing claims that are not allowed in Japan: disease treatment/prevention claims for foods or cosmetics (e.g. 'cures cancer', 'lowers blood pressure' on a product that is not tokuho/kinousei), exaggerated effects, 'no side effects', etc. Empty string if none.\"},\"confidence\":{\"type\":\"string\",\"enum\":[\"high\",\"medium\",\"low\"]},\"missing\":{\"type\":\"string\",\"description\":\"What could not be read or is missing, and which photo the user should add (e.g. 'please photograph the ingredient list on the back'). Empty if nothing.\"}},\"required\":[\"readable\",\"product\",\"supply\",\"overall\",\"food_label\",\"allergens\",\"intake\",\"interactions\",\"ingredients\",\"japan_notes\",\"cautions\",\"claims_problem\",\"claims_check\",\"confidence\",\"missing\"],\"additionalProperties\":false}","compareSchema":"{\"type\":\"object\",\"properties\":{\"summary\":{\"type\":\"string\",\"description\":\"3-5 sentence overview of how the products differ, in the output language\"},\"best_for\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"situation\":{\"type\":\"string\",\"description\":\"A goal or type of person, e.g. 'people taking blood thinners', 'tired eyes', or the user's stated goal\"},\"choice\":{\"type\":\"string\",\"description\":\"Product name, or 'none of these' equivalent\"},\"reason\":{\"type\":\"string\"}},\"required\":[\"situation\",\"choice\",\"reason\"],\"additionalProperties\":false},\"description\":\"Which product fits which situation. Put the user's stated goal first if given.\"},\"differences\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"aspect\":{\"type\":\"string\"},\"detail\":{\"type\":\"string\"}},\"required\":[\"aspect\",\"detail\"],\"additionalProperties\":false},\"description\":\"Key differences: main ingredients and amounts, label type/evidence, safety concerns, allergens, value for money if prices are given\"},\"overlap\":{\"type\":\"string\",\"description\":\"Warning if taking several of these together would double up on the same ingredient, or empty\"},\"cautions\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"description\":\"Important cautions, e.g. ask a pharmacist when on medication\"}},\"required\":[\"summary\",\"best_for\",\"differences\",\"overlap\",\"cautions\"],\"additionalProperties\":false}"};
+// ---- public/i18n.js ----
+const I18N = {
+  ja: {
+    scoreTitle: "ミエールスコア", scoreNone: "成分表が写っていないため、点数を付けられません。裏面の写真を追加してください。",
+    gradeDesc: { A: "気になる成分はほとんどありません", B: "少し気になる成分があります", C: "注意したい成分があります", D: "要注意の成分が含まれます", E: "使用を避けたい成分が含まれます" },
+    noDeductions: "減点はありません。", claims: "表示・宣伝文句の問題", scoreHow: "点数の計算方法",
+    scoreHowText: "100点から、成分ごとに減点します（危険 −40、要注意 −20、注意 −8、ほぼ問題なし −2、表示の問題 −5）。危険な成分が1つでもあれば最大20点、要注意なら最大50点です。AIに点数を付けさせず、毎回同じ式で計算しています。薬との飲み合わせやアレルギー物質（乳・小麦など）は人によって影響が違うため、点数には含めず、それぞれの欄でお知らせします。",
+    tabScan: "スキャン", tabHistory: "履歴", tabCompare: "比較", alertIngredients: "注意成分", alertInteractions: "飲み合わせ", noAlerts: "注意点なし", addCompare: "比較に追加",
+    savedNote: "この結果は「履歴」に保存しました。", toHistory: "履歴を見る",
+    selectHint: "比較したい商品を2〜4個選んでください。タップすると結果を見られます。",
+    historyEmpty: "まだ履歴がありません。下の「スキャン」から商品を撮影してください。",
+    compareN: "選んだ{n}件を比較", remove: "削除", backToHistory: "← 履歴に戻る",
+    compareTitle: "比較", compareHint: "横にスクロールできます。価格を入れると1日あたりの値段を計算します。",
+    photo: "写真", supply: "1日の目安・量", daysUnit: "{n}日分", price: "価格（円）", perDay: "1日あたり",
+    cautionIngredients: "注意が必要な成分", commonIngredients: "成分（色付き＝他と共通）", none: "なし",
+    aiCompare: "AIに比べてもらう", goalPlaceholder: "目的（例：疲れ目対策、妊娠中、薬を飲んでいる）", aiCompareBtn: "比べる",
+    aiComparing: "比較中…（30秒ほどかかることがあります）", aiResult: "AIによる比較", bestFor: "こんな人に", differences: "主な違い", overlap: "一緒に飲むときの注意",
+    labelType: "表示の種類", notifNo: "届出番号など",
+    verifyHint: "機能性表示食品は、消費者庁「機能性表示食品の届出情報検索」で届出番号を検索すると、根拠になった研究などを確認できます。",
+    labelTypes: { tokuho: "特定保健用食品（トクホ）", kinousei: "機能性表示食品", eiyou_kinou: "栄養機能食品", general_health_food: "いわゆる健康食品", foreign_supplement: "海外向けサプリメント", not_food: "食品以外", unknown: "不明" },
+    allergens: "アレルギー物質", allergenKinds: { mandatory: "表示義務（特定原材料）", recommended: "表示推奨", other: "その他" },
+    intake: "とりすぎ注意（1日あたり）", interactions: "薬との飲み合わせ",
+    tagline: "化粧品・サプリ・健康食品のパッケージを撮るだけで、成分と注意点がわかる",
+    front: "表面", back: "裏面（成分表）", extra: "追加の写真",
+    addPhoto: "タップして撮影",
+    hint: "成分表がはっきり写るように、明るい場所で撮ってください。外国語の表示でも大丈夫です。",
+    analyze: "調べる", analyzing: "解析中…（30秒ほどかかることがあります）",
+    needPhoto: "写真を1枚以上追加してください",
+    demo: "デモモード：サンプル結果を表示しています",
+    overall: "総合判定", product: "商品", brand: "ブランド", category: "種類", origin: "国・地域", labelLang: "表示言語",
+    ruleHits: "日本の規制チェック（自動）", japanNotes: "日本で気をつけたいこと", cautions: "注意が必要な人・使い方",
+    ingredients: "成分一覧", claims: "表示・宣伝文句のチェック", missing: "読み取れなかったこと",
+    confidence: "判定の確かさ", again: "別の商品を調べる",
+    disclaimer: "この結果はAIによる参考情報で、医学的な診断ではありません。持病・服薬中・妊娠中の方は医師や薬剤師に相談してください。",
+    levels: { safe: "問題なし", low: "ほぼ問題なし", caution: "注意", warning: "要注意", danger: "危険", unknown: "不明" },
+    categories: { skincare: "スキンケア", cosmetics: "化粧品", supplement: "サプリメント", health_food: "健康食品", food: "食品", medicine: "医薬品", other: "その他", unknown: "不明" },
+    conf: { high: "高", medium: "中", low: "低" },
+    errors: {
+      bad_images: "画像を読み込めませんでした。", refusal: "この画像は解析できませんでした。", incomplete: "解析が途中で終わりました。もう一度お試しください。",
+      rate_limited: "混み合っています。少し待ってからお試しください。", timeout: "時間がかかりすぎました。もう一度お試しください。", cli_missing: "PCにClaude Code（claudeコマンド）が見つかりません。", cli_failed: "Claude Codeでの解析に失敗しました。PCで claude にログインしているか確認してください。", default: "エラーが発生しました。もう一度お試しください。", bad_compare: "比較する商品を2〜4個選んでください。", unavailable: "この画面ではAIを使えません。claude.ai にログインして開いてください。", not_granted: "AIの利用が許可されていません。画面上部の権限の設定から許可してください。", invalid_json: "AIの答えを読み取れませんでした。もう一度お試しください。", refused: "この画像は解析できませんでした。別の写真でお試しください。", session_expired: "claude.ai に再ログインしてください。", image_rejected: "この画像は使えません。別の写真を選んでください。", images_unavailable: "この画面では画像を送れません。claude.ai で開いてください。",
+    },
+  },
+  en: {
+    scoreTitle: "Mieru score", scoreNone: "No ingredient list in the photos, so no score. Add a photo of the back label.",
+    gradeDesc: { A: "Few or no ingredients of concern", B: "A few minor concerns", C: "Some ingredients to watch", D: "Contains ingredients that need care", E: "Contains ingredients best avoided" },
+    noDeductions: "No deductions.", claims: "Problematic claims", scoreHow: "How the score works",
+    scoreHowText: "Starts at 100 and deducts per ingredient (danger −40, warning −20, caution −8, minor −2, problematic claims −5). Any danger ingredient caps the score at 20, any warning at 50. The AI does not pick the number; the same formula is applied every time. Interactions and allergens (milk, wheat, etc.) affect only some people, so they are not deducted; see their own sections.",
+    tabScan: "Scan", tabHistory: "History", tabCompare: "Compare", alertIngredients: "To watch", alertInteractions: "Interactions", noAlerts: "No alerts", addCompare: "Add to compare",
+    savedNote: "Saved to History.", toHistory: "Open History",
+    selectHint: "Select 2-4 products to compare. Tap one to see its result.",
+    historyEmpty: "No history yet. Tap Scan below to check a product.",
+    compareN: "Compare {n} selected", remove: "Remove", backToHistory: "← Back to history",
+    compareTitle: "Comparison", compareHint: "Scroll sideways. Enter prices to see the cost per day.",
+    photo: "Photo", supply: "Daily amount / size", daysUnit: "{n} days", price: "Price (¥)", perDay: "Per day",
+    cautionIngredients: "Ingredients to watch", commonIngredients: "Ingredients (highlighted = shared)", none: "None",
+    aiCompare: "Ask AI to compare", goalPlaceholder: "Your goal (e.g. tired eyes, pregnant, on medication)", aiCompareBtn: "Compare",
+    aiComparing: "Comparing… (can take ~30 seconds)", aiResult: "AI comparison", bestFor: "Best for", differences: "Key differences", overlap: "Taking them together",
+    labelType: "Label type (Japan)", notifNo: "Notification no.",
+    verifyHint: "For Foods with Function Claims, search the notification number in the Consumer Affairs Agency's database to see the supporting evidence.",
+    labelTypes: { tokuho: "FOSHU (Tokuho)", kinousei: "Food with Function Claims", eiyou_kinou: "Food with Nutrient Function Claims", general_health_food: "General health food (no approval)", foreign_supplement: "Supplement for a foreign market", not_food: "Not a food", unknown: "Unknown" },
+    allergens: "Allergens", allergenKinds: { mandatory: "Mandatory in Japan", recommended: "Recommended labelling", other: "Other" },
+    intake: "Daily amount check", interactions: "Interactions with medicines",
+    tagline: "Snap cosmetics, supplements or health foods to see what's inside",
+    front: "Front", back: "Back (ingredients)", extra: "More photos",
+    addPhoto: "Tap to take a photo",
+    hint: "Shoot in good light so the ingredient list is sharp. Any label language is fine.",
+    analyze: "Check", analyzing: "Analysing… (can take ~30 seconds)",
+    needPhoto: "Add at least one photo",
+    demo: "Demo mode: showing a sample result",
+    overall: "Overall", product: "Product", brand: "Brand", category: "Type", origin: "Origin", labelLang: "Label language",
+    ruleHits: "Japan regulation check (automatic)", japanNotes: "Notes for Japan", cautions: "Who should be careful",
+    ingredients: "Ingredients", claims: "Claims on the package", missing: "Could not read",
+    confidence: "Confidence", again: "Check another product",
+    disclaimer: "AI-generated reference information, not medical advice. If you are pregnant, have a condition or take medicines, ask a doctor or pharmacist.",
+    levels: { safe: "No concern", low: "Minor", caution: "Caution", warning: "Warning", danger: "Danger", unknown: "Unknown" },
+    categories: { skincare: "Skincare", cosmetics: "Cosmetics", supplement: "Supplement", health_food: "Health food", food: "Food", medicine: "Medicine", other: "Other", unknown: "Unknown" },
+    conf: { high: "High", medium: "Medium", low: "Low" },
+    errors: {
+      bad_images: "Could not read the images.", refusal: "This image could not be analysed.", incomplete: "The analysis was cut short. Please try again.",
+      rate_limited: "Busy right now. Please try again shortly.", timeout: "It took too long. Please try again.", cli_missing: "Claude Code (the claude command) was not found on the computer.", cli_failed: "Analysis with Claude Code failed. Check that you are logged in to claude on the computer.", default: "Something went wrong. Please try again.", bad_compare: "Select 2-4 products to compare.", unavailable: "AI is not available here. Open this page on claude.ai while signed in.", not_granted: "AI use is not allowed for this page. Allow it in the page permissions.", invalid_json: "Could not read the AI answer. Please try again.", refused: "This image could not be analysed. Try another photo.", session_expired: "Please sign in to claude.ai again.", image_rejected: "This image cannot be used. Choose another photo.", images_unavailable: "Images cannot be sent from this view. Open the page on claude.ai.",
+    },
+  },
+  zh: {
+    scoreTitle: "Mieru评分", scoreNone: "照片中没有成分表，无法评分。请补拍背面。",
+    gradeDesc: { A: "几乎没有需要担心的成分", B: "有少量需留意的成分", C: "含有需注意的成分", D: "含有需警惕的成分", E: "含有最好避免的成分" },
+    noDeductions: "没有扣分。", claims: "标示・宣传语的问题", scoreHow: "评分方法",
+    scoreHowText: "从100分开始按成分扣分（危险−40、需警惕−20、注意−8、基本无问题−2、标示问题−5）。只要有1种危险成分最高20分，有需警惕成分最高50分。分数不由AI决定，每次用同一公式计算。药物相互作用和过敏原（乳、小麦等）因人而异，不计入分数，请查看各自栏目。",
+    tabScan: "扫描", tabHistory: "历史", tabCompare: "比较", alertIngredients: "注意成分", alertInteractions: "相互作用", noAlerts: "无注意事项", addCompare: "加入比较",
+    savedNote: "已保存到“历史”。", toHistory: "查看历史",
+    selectHint: "请选择2～4个要比较的商品。点击可查看结果。",
+    historyEmpty: "还没有历史记录。请点击下方“扫描”拍摄商品。",
+    compareN: "比较已选的{n}项", remove: "删除", backToHistory: "← 返回历史",
+    compareTitle: "比较", compareHint: "可左右滑动。输入价格即可计算每日费用。",
+    photo: "照片", supply: "每日用量・容量", daysUnit: "{n}天份", price: "价格（日元）", perDay: "每日",
+    cautionIngredients: "需注意的成分", commonIngredients: "成分（着色＝与其他共有）", none: "无",
+    aiCompare: "让AI比较", goalPlaceholder: "目的（如：缓解眼疲劳、孕期、正在服药）", aiCompareBtn: "比较",
+    aiComparing: "比较中…（可能需要约30秒）", aiResult: "AI比较结果", bestFor: "适合人群", differences: "主要区别", overlap: "同时服用的注意",
+    labelType: "标示类别（日本）", notifNo: "备案编号",
+    verifyHint: "机能性标示食品可在日本消费者厅的“机能性标示食品备案信息检索”中用备案编号查询依据的研究。",
+    labelTypes: { tokuho: "特定保健用食品（Tokuho）", kinousei: "机能性标示食品", eiyou_kinou: "营养机能食品", general_health_food: "一般健康食品（无审批）", foreign_supplement: "海外保健品", not_food: "非食品", unknown: "不明" },
+    allergens: "过敏原", allergenKinds: { mandatory: "日本强制标示", recommended: "建议标示", other: "其他" },
+    intake: "摄入过量注意（每日）", interactions: "与药物的相互作用",
+    tagline: "拍下化妆品、保健品或健康食品的包装，即可了解成分与注意事项",
+    front: "正面", back: "背面（成分表）", extra: "更多照片",
+    addPhoto: "点击拍照",
+    hint: "请在明亮处拍摄，使成分表清晰可见。任何语言的标签都可以。",
+    analyze: "检查", analyzing: "分析中…（可能需要约30秒）",
+    needPhoto: "请至少添加一张照片",
+    demo: "演示模式：显示示例结果",
+    overall: "综合判断", product: "商品", brand: "品牌", category: "类别", origin: "产地", labelLang: "标签语言",
+    ruleHits: "日本法规检查（自动）", japanNotes: "在日本需注意", cautions: "需注意的人群与用法",
+    ingredients: "成分列表", claims: "包装宣传语检查", missing: "未能读取的内容",
+    confidence: "可信度", again: "检查其他商品",
+    disclaimer: "本结果为AI提供的参考信息，并非医学诊断。孕妇、患有疾病或正在服药者请咨询医生或药剂师。",
+    levels: { safe: "无问题", low: "基本无问题", caution: "注意", warning: "需警惕", danger: "危险", unknown: "不明" },
+    categories: { skincare: "护肤品", cosmetics: "化妆品", supplement: "保健品", health_food: "健康食品", food: "食品", medicine: "药品", other: "其他", unknown: "不明" },
+    conf: { high: "高", medium: "中", low: "低" },
+    errors: {
+      bad_images: "无法读取图片。", refusal: "无法分析此图片。", incomplete: "分析中断，请重试。",
+      rate_limited: "当前繁忙，请稍后再试。", timeout: "处理超时，请重试。", cli_missing: "电脑上未找到 Claude Code（claude 命令）。", cli_failed: "Claude Code 分析失败，请确认电脑上已登录 claude。", default: "发生错误，请重试。", bad_compare: "请选择2～4个商品进行比较。", unavailable: "此处无法使用AI。请登录 claude.ai 后打开。", not_granted: "未允许此页面使用AI，请在页面权限中允许。", invalid_json: "无法读取AI的回答，请重试。", refused: "无法分析此图片，请换一张照片。", session_expired: "请重新登录 claude.ai。", image_rejected: "无法使用此图片，请选择其他照片。", images_unavailable: "此处无法发送图片，请在 claude.ai 中打开。",
+    },
+  },
+  ko: {
+    scoreTitle: "미에루 점수", scoreNone: "사진에 성분표가 없어 점수를 매길 수 없습니다. 뒷면 사진을 추가하세요.",
+    gradeDesc: { A: "신경 쓰이는 성분이 거의 없습니다", B: "조금 신경 쓰이는 성분이 있습니다", C: "주의할 성분이 있습니다", D: "요주의 성분이 포함되어 있습니다", E: "피하는 것이 좋은 성분이 포함되어 있습니다" },
+    noDeductions: "감점이 없습니다.", claims: "표시·광고 문구 문제", scoreHow: "점수 계산 방법",
+    scoreHowText: "100점에서 성분별로 감점합니다(위험 −40, 요주의 −20, 주의 −8, 거의 문제 없음 −2, 표시 문제 −5). 위험 성분이 하나라도 있으면 최대 20점, 요주의 성분이 있으면 최대 50점입니다. 점수는 AI가 정하지 않고 매번 같은 공식으로 계산합니다. 약물 상호작용과 알레르기 물질(우유, 밀 등)은 사람마다 영향이 다르므로 점수에 포함하지 않고 각 항목에서 알려 드립니다.",
+    tabScan: "스캔", tabHistory: "기록", tabCompare: "비교", alertIngredients: "주의 성분", alertInteractions: "상호작용", noAlerts: "주의점 없음", addCompare: "비교에 추가",
+    savedNote: "이 결과를 '기록'에 저장했습니다.", toHistory: "기록 보기",
+    selectHint: "비교할 상품을 2~4개 선택하세요. 탭하면 결과를 볼 수 있습니다.",
+    historyEmpty: "아직 기록이 없습니다. 아래 '스캔'에서 상품을 촬영하세요.",
+    compareN: "선택한 {n}개 비교", remove: "삭제", backToHistory: "← 기록으로 돌아가기",
+    compareTitle: "비교", compareHint: "옆으로 스크롤할 수 있습니다. 가격을 입력하면 1일당 가격을 계산합니다.",
+    photo: "사진", supply: "1일 섭취량·용량", daysUnit: "{n}일분", price: "가격(엔)", perDay: "1일당",
+    cautionIngredients: "주의할 성분", commonIngredients: "성분(색 표시＝다른 상품과 공통)", none: "없음",
+    aiCompare: "AI에게 비교 맡기기", goalPlaceholder: "목적(예: 눈 피로, 임신 중, 약 복용 중)", aiCompareBtn: "비교하기",
+    aiComparing: "비교 중…(30초 정도 걸릴 수 있어요)", aiResult: "AI 비교 결과", bestFor: "이런 분께", differences: "주요 차이점", overlap: "함께 복용할 때 주의",
+    labelType: "표시 종류(일본)", notifNo: "신고 번호",
+    verifyHint: "기능성 표시 식품은 일본 소비자청 '기능성 표시 식품 신고 정보 검색'에서 신고 번호로 근거 연구를 확인할 수 있습니다.",
+    labelTypes: { tokuho: "특정보건용식품(토쿠호)", kinousei: "기능성 표시 식품", eiyou_kinou: "영양 기능 식품", general_health_food: "일반 건강식품(심사 없음)", foreign_supplement: "해외용 보충제", not_food: "식품 아님", unknown: "불명" },
+    allergens: "알레르기 물질", allergenKinds: { mandatory: "일본 표시 의무", recommended: "표시 권장", other: "기타" },
+    intake: "과다 섭취 주의(1일)", interactions: "약과의 상호작용",
+    tagline: "화장품·보충제·건강식품 패키지를 찍기만 하면 성분과 주의점을 알 수 있어요",
+    front: "앞면", back: "뒷면(성분표)", extra: "추가 사진",
+    addPhoto: "탭하여 촬영",
+    hint: "성분표가 선명하게 보이도록 밝은 곳에서 찍어 주세요. 외국어 표기도 괜찮습니다.",
+    analyze: "확인하기", analyzing: "분석 중…(30초 정도 걸릴 수 있어요)",
+    needPhoto: "사진을 1장 이상 추가해 주세요",
+    demo: "데모 모드: 샘플 결과를 표시하고 있습니다",
+    overall: "종합 판정", product: "상품", brand: "브랜드", category: "종류", origin: "국가·지역", labelLang: "표시 언어",
+    ruleHits: "일본 규제 체크(자동)", japanNotes: "일본에서 주의할 점", cautions: "주의가 필요한 사람·사용법",
+    ingredients: "성분 목록", claims: "표시·광고 문구 체크", missing: "읽지 못한 내용",
+    confidence: "판정 신뢰도", again: "다른 상품 확인하기",
+    disclaimer: "이 결과는 AI가 제공하는 참고 정보이며 의학적 진단이 아닙니다. 지병이 있거나 약을 복용 중이거나 임신 중인 분은 의사나 약사와 상담하세요.",
+    levels: { safe: "문제 없음", low: "거의 문제 없음", caution: "주의", warning: "요주의", danger: "위험", unknown: "불명" },
+    categories: { skincare: "스킨케어", cosmetics: "화장품", supplement: "보충제", health_food: "건강식품", food: "식품", medicine: "의약품", other: "기타", unknown: "불명" },
+    conf: { high: "높음", medium: "보통", low: "낮음" },
+    errors: {
+      bad_images: "이미지를 읽을 수 없습니다.", refusal: "이 이미지는 분석할 수 없습니다.", incomplete: "분석이 중간에 끝났습니다. 다시 시도해 주세요.",
+      rate_limited: "혼잡합니다. 잠시 후 다시 시도해 주세요.", timeout: "시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.", cli_missing: "PC에서 Claude Code(claude 명령)를 찾을 수 없습니다.", cli_failed: "Claude Code 분석에 실패했습니다. PC에서 claude에 로그인되어 있는지 확인하세요.", default: "오류가 발생했습니다. 다시 시도해 주세요.", bad_compare: "비교할 상품을 2~4개 선택하세요.", unavailable: "여기서는 AI를 사용할 수 없습니다. claude.ai에 로그인하여 여세요.", not_granted: "이 페이지의 AI 사용이 허용되지 않았습니다. 페이지 권한에서 허용하세요.", invalid_json: "AI 답변을 읽지 못했습니다. 다시 시도해 주세요.", refused: "이 이미지는 분석할 수 없습니다. 다른 사진으로 시도해 주세요.", session_expired: "claude.ai에 다시 로그인하세요.", image_rejected: "이 이미지는 사용할 수 없습니다. 다른 사진을 선택하세요.", images_unavailable: "여기서는 이미지를 보낼 수 없습니다. claude.ai에서 여세요.",
+    },
+  },
+};
+
+// ---- public/rules.js ----
+// Rule-based check against ingredients that are prohibited in cosmetics or treated as
+// medicines in Japan. This runs independently of the AI so that well-known red flags
+// are never missed. Matching is done on the printed text and the English name.
+// The list is a starting point for reference, not a complete legal database.
+
+const RULES = [
+  {
+    id: "mercury",
+    level: "danger",
+    patterns: [/mercur/i, /\bcalomel\b/i, /水銀/, /甘汞/, /汞/, /수은/],
+    msg: {
+      ja: "水銀・水銀化合物は日本の化粧品基準で配合禁止です。海外の美白クリームで検出例があります。使用を中止してください。",
+      en: "Mercury compounds are prohibited in cosmetics in Japan and have been found in some imported whitening creams. Stop using it.",
+      zh: "汞及其化合物在日本化妆品标准中禁止使用，海外美白霜曾被检出。请停止使用。",
+      ko: "수은 및 수은 화합물은 일본 화장품 기준에서 배합 금지입니다. 해외 미백 크림에서 검출 사례가 있습니다. 사용을 중단하세요.",
+    },
+  },
+  {
+    id: "steroid",
+    level: "danger",
+    patterns: [
+      /clobetasol/i, /betamethason/i, /dexamethason/i, /hydrocortison/i, /prednisol/i,
+      /triamcinolon/i, /fluocinol/i, /mometason/i,
+      /クロベタゾール/, /ベタメタゾン/, /デキサメタゾン/, /ヒドロコルチゾン/, /プレドニゾロン/,
+      /氯倍他索/, /倍他米松/, /地塞米松/, /氢化可的松/,
+      /스테로이드/, /베타메타손/, /덱사메타손/,
+    ],
+    msg: {
+      ja: "副腎皮質ステロイドは医薬品成分で、化粧品には配合できません。長期使用で皮膚が薄くなるなどの副作用があります。",
+      en: "Corticosteroids are medicinal ingredients and cannot be used in cosmetics in Japan. Long-term use can thin the skin.",
+      zh: "皮质类固醇属于药品成分，在日本不能添加于化妆品中。长期使用可能导致皮肤变薄等副作用。",
+      ko: "부신피질 스테로이드는 의약품 성분으로 화장품에 배합할 수 없습니다. 장기 사용 시 피부가 얇아지는 등의 부작용이 있습니다.",
+    },
+  },
+  {
+    id: "tretinoin",
+    level: "warning",
+    patterns: [/tretinoin/i, /retinoic acid/i, /トレチノイン/, /維Ａ酸|维A酸/, /트레티노인/],
+    msg: {
+      ja: "トレチノインは日本では医薬品成分で、化粧品には配合できません。妊娠中は特に避けてください。",
+      en: "Tretinoin is a prescription-medicine ingredient in Japan and not allowed in cosmetics. Avoid during pregnancy.",
+      zh: "维A酸在日本属于药品成分，不能用于化妆品。孕期尤其应避免。",
+      ko: "트레티노인은 일본에서 의약품 성분으로 화장품에 배합할 수 없습니다. 임신 중에는 특히 피하세요.",
+    },
+  },
+  {
+    id: "hydroquinone",
+    level: "caution",
+    patterns: [/hydroquinone/i, /ハイドロキノン|ヒドロキノン/, /氢醌|對苯二酚|对苯二酚/, /하이드로퀴논/],
+    msg: {
+      ja: "ハイドロキノンは日本でも化粧品に使えますが、海外製品は高濃度のことがあります。刺激や白斑に注意し、濃度を確認してください。",
+      en: "Hydroquinone is allowed in Japanese cosmetics, but imported products may be high-strength. Check the concentration; watch for irritation.",
+      zh: "氢醌在日本可用于化妆品，但海外产品浓度可能较高。请确认浓度，注意刺激。",
+      ko: "하이드로퀴논은 일본에서도 화장품에 사용 가능하지만 해외 제품은 고농도일 수 있습니다. 농도를 확인하고 자극에 주의하세요.",
+    },
+  },
+  {
+    id: "formaldehyde",
+    level: "warning",
+    patterns: [/formaldehyde/i, /formalin/i, /ホルムアルデヒド/, /甲醛/, /포름알데히드/],
+    msg: {
+      ja: "ホルムアルデヒドは日本の化粧品基準で配合禁止です。",
+      en: "Formaldehyde is prohibited in cosmetics in Japan.",
+      zh: "甲醛在日本化妆品标准中禁止使用。",
+      ko: "포름알데히드는 일본 화장품 기준에서 배합 금지입니다.",
+    },
+  },
+  {
+    id: "lead",
+    level: "danger",
+    patterns: [/\blead\b(?! to)/i, /\bplumb/i, /\bkohl\b/i, /\bsurma\b/i, /鉛(?!筆)/, /铅(?!笔)/, /\b납\b/],
+    msg: {
+      ja: "鉛を含む可能性があります（一部の海外アイライナー「コール」「スルマ」など）。使用を避けてください。",
+      en: "May contain lead (e.g. some imported kohl/surma eyeliners). Avoid using it.",
+      zh: "可能含铅（如部分海外眼线粉 kohl/surma）。请避免使用。",
+      ko: "납이 포함되었을 수 있습니다(일부 해외 콜/수르마 아이라이너 등). 사용을 피하세요.",
+    },
+  },
+  {
+    id: "melatonin",
+    level: "warning",
+    patterns: [/melatonin/i, /メラトニン/, /褪黑/, /멜라토닌/],
+    msg: {
+      ja: "メラトニンは日本では医薬品扱いで、サプリとしては販売されていません。個人輸入は2か月分以内が目安です。",
+      en: "Melatonin is treated as a medicine in Japan and not sold as a supplement. Personal import is limited to about 2 months' supply.",
+      zh: "褪黑素在日本被视为药品，不作为保健品销售。个人进口以2个月用量为限。",
+      ko: "멜라토닌은 일본에서 의약품으로 취급되며 보충제로 판매되지 않습니다. 개인 수입은 2개월분 이내가 기준입니다.",
+    },
+  },
+  {
+    id: "dhea",
+    level: "warning",
+    patterns: [/\bDHEA\b/i, /dehydroepiandrosterone/i, /デヒドロエピアンドロステロン/, /脱氢表雄酮/],
+    msg: {
+      ja: "DHEAは日本では医薬品扱いのホルモン成分です。自己判断での使用は避けてください。",
+      en: "DHEA is a hormone treated as a medicine in Japan. Do not use without medical advice.",
+      zh: "DHEA在日本属于药品类激素成分，请勿自行服用。",
+      ko: "DHEA는 일본에서 의약품으로 취급되는 호르몬 성분입니다. 임의 사용을 피하세요.",
+    },
+  },
+  {
+    id: "ephedra",
+    level: "danger",
+    patterns: [/ephedr/i, /ma huang/i, /麻黄/, /エフェドラ|エフェドリン/, /마황|에페드린/],
+    msg: {
+      ja: "エフェドラ（麻黄）・エフェドリンは日本では医薬品扱いです。心臓や血圧への重い副作用の報告があります。",
+      en: "Ephedra/ephedrine is a medicine in Japan; serious heart and blood-pressure side effects have been reported.",
+      zh: "麻黄/麻黄碱在日本属于药品，有严重心脏和血压副作用的报告。",
+      ko: "마황/에페드린은 일본에서 의약품으로 취급되며 심장·혈압 관련 심각한 부작용 보고가 있습니다.",
+    },
+  },
+  {
+    id: "yohimbe",
+    level: "warning",
+    patterns: [/yohimb/i, /ヨヒンビン|ヨヒンベ/, /育亨宾/, /요힘빈/],
+    msg: {
+      ja: "ヨヒンベ・ヨヒンビンは日本では医薬品扱いです。血圧上昇などの副作用があります。",
+      en: "Yohimbe/yohimbine is treated as a medicine in Japan and can raise blood pressure.",
+      zh: "育亨宾在日本属于药品，可能导致血压升高。",
+      ko: "요힘베/요힘빈은 일본에서 의약품으로 취급되며 혈압 상승 등의 부작용이 있습니다.",
+    },
+  },
+  {
+    id: "senna",
+    level: "caution",
+    patterns: [/senna/i, /センナ/, /番泻|番瀉/, /센나/],
+    msg: {
+      ja: "センナの葉・果実は日本では医薬品扱いです（茎は食品可）。ダイエット茶などに入っていることがあり、下痢や腹痛の原因になります。",
+      en: "Senna leaf/pod is a medicine in Japan (stem is allowed in food). Often in 'diet teas'; can cause diarrhoea.",
+      zh: "番泻叶/果实在日本属于药品（茎可用于食品），常见于减肥茶，可能引起腹泻。",
+      ko: "센나 잎·열매는 일본에서 의약품으로 취급됩니다(줄기는 식품 가능). 다이어트 차에 들어 있는 경우가 있으며 설사의 원인이 됩니다.",
+    },
+  },
+  {
+    id: "undeclared_drugs",
+    level: "danger",
+    patterns: [
+      /sibutramin/i, /sildenafil/i, /tadalafil/i, /vardenafil/i, /phenolphthalein/i, /fluoxetin/i,
+      /シブトラミン/, /シルデナフィル/, /タダラフィル/, /フェノールフタレイン/,
+      /西布曲明/, /西地那非/, /他达拉非/, /酚酞/,
+    ],
+    msg: {
+      ja: "医薬品成分です。ダイエットや精力増強をうたう海外製品で検出され、健康被害が報告されています。使用しないでください。",
+      en: "This is a medicinal drug ingredient found in some 'diet' or 'enhancement' products, linked to health harm. Do not use.",
+      zh: "这是药品成分，曾在海外减肥或壮阳产品中检出并造成健康损害。请勿使用。",
+      ko: "의약품 성분입니다. 다이어트·정력 강화를 내세운 해외 제품에서 검출되어 건강 피해가 보고되었습니다. 사용하지 마세요.",
+    },
+  },
+  {
+    id: "thc",
+    level: "danger",
+    patterns: [/\bTHC\b/, /tetrahydrocannabinol/i, /テトラヒドロカンナビノール/, /四氢大麻酚/],
+    msg: {
+      ja: "THCは日本では麻薬として規制されています。持ち込み・所持は違法になる可能性があります。",
+      en: "THC is a controlled narcotic in Japan. Bringing in or possessing it may be illegal.",
+      zh: "THC在日本作为麻醉品受到管制，携带或持有可能违法。",
+      ko: "THC는 일본에서 마약으로 규제됩니다. 반입·소지가 불법이 될 수 있습니다.",
+    },
+  },
+  {
+    id: "cbd",
+    level: "caution",
+    patterns: [/\bCBD\b/, /cannabidiol/i, /カンナビジオール/, /大麻二酚/, /hemp extract/i],
+    msg: {
+      ja: "CBD製品は、THCが基準値を超えて含まれると日本では違法になります。海外製は成分分析書（COA）で確認してください。",
+      en: "CBD products are illegal in Japan if THC exceeds the legal limit. Check the certificate of analysis for imported products.",
+      zh: "CBD产品若THC超过日本标准即属违法，海外产品请查看成分分析证书（COA）。",
+      ko: "CBD 제품은 THC가 기준치를 넘으면 일본에서 불법입니다. 해외 제품은 성분 분석서(COA)로 확인하세요.",
+    },
+  },
+  {
+    id: "red_yeast_rice",
+    level: "warning",
+    patterns: [/red yeast rice/i, /monascus/i, /紅麹|紅こうじ|ベニコウジ/, /红曲|紅麴/, /홍국/],
+    msg: {
+      ja: "紅麹を含みます。2024年に紅麹を含むサプリで腎臓などの健康被害が報告されました。製造元の回収情報を確認し、コレステロールの薬（スタチン）を飲んでいる方は医師に相談してください。",
+      en: "Contains red yeast rice. In 2024, kidney and other health harm was reported in Japan from red yeast rice supplements. Check for recalls, and ask a doctor if you take statins.",
+      zh: "含有红曲。2024年日本曾报告红曲保健品导致肾脏等健康损害。请确认召回信息；服用他汀类降脂药者请咨询医生。",
+      ko: "홍국을 함유합니다. 2024년 일본에서 홍국 보충제로 인한 신장 등 건강 피해가 보고되었습니다. 회수 정보를 확인하고 스타틴을 복용 중이면 의사와 상담하세요.",
+    },
+  },
+  {
+    id: "st_johns_wort",
+    level: "warning",
+    patterns: [/st\.? ?john'?s ?wort/i, /hypericum/i, /セントジョーンズワート|セイヨウオトギリソウ/, /贯叶连翘|聖約翰草|圣约翰草/, /세인트존스워트/],
+    msg: {
+      ja: "セントジョーンズワートは多くの薬の効き目を弱めます（抗うつ薬、経口避妊薬、ワルファリン、免疫抑制薬、抗HIV薬など）。薬を飲んでいる方は使用前に医師・薬剤師に相談してください。",
+      en: "St John's wort weakens many medicines (antidepressants, oral contraceptives, warfarin, immunosuppressants, HIV drugs, etc.). Ask a doctor or pharmacist if you take any medicine.",
+      zh: "圣约翰草会减弱多种药物的效果（抗抑郁药、口服避孕药、华法林、免疫抑制剂、抗HIV药等）。正在服药者请先咨询医生或药剂师。",
+      ko: "세인트존스워트는 여러 약의 효과를 약하게 합니다(항우울제, 경구 피임약, 와파린, 면역억제제, HIV 치료제 등). 약을 복용 중이면 의사·약사와 상담하세요.",
+    },
+  },
+  {
+    id: "ginkgo",
+    level: "caution",
+    patterns: [/ginkgo/i, /イチョウ葉|いちょう葉|銀杏葉|ギンコ/, /银杏叶/, /은행잎/],
+    msg: {
+      ja: "イチョウ葉は血を固まりにくくする薬（ワルファリン、アスピリンなど）と一緒にとると出血しやすくなることがあります。手術の前も中止が勧められます。",
+      en: "Ginkgo may increase bleeding risk with blood thinners (warfarin, aspirin, etc.). Stopping before surgery is usually advised.",
+      zh: "银杏叶与抗凝血药（华法林、阿司匹林等）同服可能增加出血风险，手术前通常建议停用。",
+      ko: "은행잎은 혈액 응고를 억제하는 약(와파린, 아스피린 등)과 함께 복용 시 출혈 위험이 커질 수 있습니다. 수술 전에도 중단이 권장됩니다.",
+    },
+  },
+  {
+    id: "vitamin_k",
+    level: "caution",
+    patterns: [/vitamin ?k\d?\b/i, /phylloquinone|menaquinone|phytonadione/i, /ビタミンK/, /维生素K|維生素K/, /비타민 ?K/],
+    msg: {
+      ja: "ビタミンKはワルファリン（血を固まりにくくする薬）の効き目を弱めます。ワルファリンを飲んでいる方は医師に相談してください。",
+      en: "Vitamin K counteracts warfarin. If you take warfarin, ask your doctor first.",
+      zh: "维生素K会减弱华法林的效果，服用华法林者请先咨询医生。",
+      ko: "비타민 K는 와파린의 효과를 약하게 합니다. 와파린을 복용 중이면 의사와 상담하세요.",
+    },
+  },
+  {
+    id: "grapefruit",
+    level: "caution",
+    patterns: [/grapefruit/i, /グレープフルーツ/, /葡萄柚|西柚/, /자몽/],
+    msg: {
+      ja: "グレープフルーツは一部の血圧の薬（カルシウム拮抗薬）や脂質異常症の薬などの作用を強めることがあります。薬を飲んでいる方は薬剤師に確認してください。",
+      en: "Grapefruit can strengthen the effect of some medicines (e.g. certain blood-pressure and cholesterol drugs). Check with a pharmacist if you take medicine.",
+      zh: "葡萄柚可能增强部分降压药、降脂药等的作用，正在服药者请咨询药剂师。",
+      ko: "자몽은 일부 혈압약·고지혈증약 등의 작용을 강하게 할 수 있습니다. 약을 복용 중이면 약사에게 확인하세요.",
+    },
+  },
+  {
+    id: "turmeric",
+    level: "caution",
+    patterns: [/turmeric/i, /curcuma/i, /ウコン|うこん|ターメリック/, /姜黄|薑黃/, /강황|울금/],
+    msg: {
+      ja: "ウコンのサプリでは肝障害の報告があります。肝臓の病気がある方や、だるさ・黄疸が出た場合は中止して受診してください。",
+      en: "Liver injury has been reported with turmeric supplements. Stop and see a doctor if you have liver disease or notice fatigue or jaundice.",
+      zh: "姜黄保健品有肝损伤的报告。患有肝病或出现乏力、黄疸时请停用并就医。",
+      ko: "강황(울금) 보충제로 간 손상이 보고된 바 있습니다. 간 질환이 있거나 피로감·황달이 나타나면 중단하고 진료를 받으세요.",
+    },
+  },
+];
+
+function checkRules(ingredients, rawTexts = []) {
+  const haystacks = [
+    ...ingredients.flatMap((i) => [i.original, i.english, i.name]),
+    ...rawTexts,
+  ].filter(Boolean);
+  const hits = [];
+  for (const rule of RULES) {
+    const matched = haystacks.find((h) => rule.patterns.some((p) => p.test(h)));
+    if (matched) hits.push({ id: rule.id, level: rule.level, matched, msg: rule.msg });
+  }
+  return hits;
+}
+
+// Japan's 8 mandatory food allergens (特定原材料). Matching is deliberately conservative to
+// avoid false alarms such as "coconut milk", "cocoa butter", "乳化剤" (emulsifier) or "乳酸" (lactic acid).
+const ALLERGENS = [
+  { id: "shrimp", name: { ja: "えび", en: "Shrimp", zh: "虾", ko: "새우" }, patterns: [/shrimp|prawn/i, /えび|エビ|海老/, /虾|蝦/, /새우/] },
+  { id: "crab", name: { ja: "かに", en: "Crab", zh: "蟹", ko: "게" }, patterns: [/\bcrab/i, /かに|カニ|蟹/, /꽃게|게살/] },
+  { id: "walnut", name: { ja: "くるみ", en: "Walnut", zh: "核桃", ko: "호두" }, patterns: [/walnut/i, /くるみ|クルミ|胡桃/, /核桃/, /호두/] },
+  { id: "wheat", name: { ja: "小麦", en: "Wheat", zh: "小麦", ko: "밀" }, patterns: [/wheat|gluten/i, /小麦|グルテン/, /밀가루|소맥/] },
+  { id: "buckwheat", name: { ja: "そば", en: "Buckwheat", zh: "荞麦", ko: "메밀" }, patterns: [/buckwheat/i, /そば(?!かす)|ソバ|蕎麦/, /荞麦|蕎麥/, /메밀/] },
+  { id: "egg", name: { ja: "卵", en: "Egg", zh: "鸡蛋", ko: "달걀" }, patterns: [/\beggs?\b|albumen/i, /卵|たまご|タマゴ/, /鸡蛋|雞蛋|蛋白粉|蛋黄/, /계란|달걀|난백|난황/] },
+  {
+    id: "milk",
+    name: { ja: "乳", en: "Milk", zh: "乳", ko: "우유" },
+    patterns: [
+      /(?<!(?:coconut|soy|almond|oat|rice) )\bmilk\b(?! thistle)/i, /\bwhey\b|\bcasein|lactose|\bdairy\b|\bcheese\b/i,
+      /(?<!(?:cocoa|shea|mango|cacao|kokum) )\bbutter\b/i,
+      /牛乳|乳成分|乳製品|粉乳|乳糖|乳清|乳たんぱく|乳タンパク|チーズ|ホエイ|カゼイン|練乳|バター(?!ミルク)/,
+      /牛奶|乳清蛋白|奶粉|酪蛋白/, /우유|유청|분유|카제인/,
+    ],
+  },
+  { id: "peanut", name: { ja: "落花生", en: "Peanut", zh: "花生", ko: "땅콩" }, patterns: [/peanut|groundnut|arachis/i, /落花生|ピーナッツ|ピーナツ/, /花生/, /땅콩/] },
+];
+
+function detectAllergens(ingredients) {
+  const texts = ingredients.flatMap((i) => [i.original, i.english]).filter(Boolean);
+  const found = [];
+  for (const a of ALLERGENS) {
+    const source = texts.find((t) => a.patterns.some((p) => p.test(t)));
+    if (source) found.push({ id: a.id, source });
+  }
+  return found;
+}
+
+// Combine the model's allergen list with the keyword hits so a mandatory allergen is never dropped.
+function mergeAllergens(fromModel = [], detected = [], lang = "ja") {
+  const merged = [...fromModel];
+  for (const d of detected) {
+    const a = ALLERGENS.find((x) => x.id === d.id);
+    const already = merged.some((m) => a.patterns.some((p) => p.test(m.name)) || Object.values(a.name).includes(m.name));
+    if (!already) merged.push({ name: a.name[lang] ?? a.name.ja, kind: "mandatory", source: d.source });
+  }
+  return merged;
+}
+
+// ---- public/score.js ----
+// Mieru score: 0-100, higher = fewer concerns. Computed with a fixed formula from the
+// per-ingredient levels (never asked from the AI), so the same analysis always gives the
+// same score. Shared by the server and the browser.
+
+const PENALTY = { danger: 40, warning: 20, caution: 8, low: 2, safe: 0, unknown: 0 };
+const RANK = { safe: 0, low: 1, unknown: 1, caution: 2, warning: 3, danger: 4 };
+// One serious ingredient caps the score no matter how clean the rest is.
+const CAP = { danger: 20, warning: 50 };
+
+const GRADES = [
+  { min: 80, grade: "A" },
+  { min: 60, grade: "B" },
+  { min: 40, grade: "C" },
+  { min: 20, grade: "D" },
+  { min: 0, grade: "E" },
+];
+
+/**
+ * @returns {{ score: number|null, grade: string|null, deductions: {label: string, level: string, points: number}[] }}
+ * score is null when there is no ingredient list to judge.
+ */
+function computeScore(result) {
+  const ingredients = result?.ingredients ?? [];
+  if (!result?.readable || ingredients.length === 0) return { score: null, grade: null, deductions: [] };
+
+  // A rule hit (Japan check) raises the level of the ingredient it matched.
+  const ruleLevel = new Map();
+  for (const h of result.rule_hits ?? []) {
+    if (RANK[h.level] > RANK[ruleLevel.get(h.matched) ?? "safe"]) ruleLevel.set(h.matched, h.level);
+  }
+  const matchedTexts = new Set();
+  const allergenSources = new Set((result.allergens ?? []).map((a) => a.source).filter(Boolean));
+
+  const deductions = [];
+  let worst = "safe";
+  for (const i of ingredients) {
+    let level = i.level;
+    for (const text of [i.original, i.english, i.name]) {
+      const r = ruleLevel.get(text);
+      if (r) {
+        matchedTexts.add(text);
+        if (RANK[r] > RANK[level]) level = r;
+      }
+    }
+    // Allergens matter only to people with that allergy; they are shown in the allergen
+    // section instead of lowering everyone's score (unless a rule made them serious).
+    if (allergenSources.has(i.original) && (level === "caution" || level === "low")) continue;
+    if (RANK[level] > RANK[worst]) worst = level;
+    if (PENALTY[level]) deductions.push({ label: i.name || i.original, level, points: PENALTY[level] });
+  }
+  // Rule hits that did not match an ingredient (e.g. found in the product name).
+  for (const h of result.rule_hits ?? []) {
+    if (!matchedTexts.has(h.matched) && PENALTY[h.level]) {
+      deductions.push({ label: h.matched, level: h.level, points: PENALTY[h.level] });
+      if (RANK[h.level] > RANK[worst]) worst = h.level;
+    }
+  }
+  // Only an explicit "problem found" counts; a comment saying "no problem" must not cost points.
+  if (result.claims_problem === true) deductions.push({ label: "claims", level: "caution", points: 5 });
+
+  let score = 100 - deductions.reduce((sum, d) => sum + d.points, 0);
+  if (CAP[worst] !== undefined) score = Math.min(score, CAP[worst]);
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  const grade = GRADES.find((g) => score >= g.min).grade;
+  deductions.sort((a, b) => b.points - a.points);
+  return { score, grade, deductions };
+}
+
+// ---- public/prompts.js ----
+// Prompt text shared by the local server and the claude.ai artifact build.
+const LANG_NAMES = { ja: "Japanese", en: "English", zh: "Simplified Chinese", ko: "Korean" };
+
+const ANALYZE_SYSTEM = `You analyse photos of cosmetics, skincare, supplements and similar consumer products
+(front of package and/or back label) for a consumer who wants to know what is in the product and
+whether there is anything to be careful about. Many products were bought abroad or received as
+souvenirs, so labels may be in any language; read them all.
+
+How to work:
+- Read every photo. Identify the product, brand, category and country of origin from what is printed
+  (barcode prefix, address, language, regulatory marks). Do not invent facts that are not visible;
+  if you infer something, say it is an inference.
+- Transcribe the ingredient list in label order. Give each ingredient its standard English/INCI name,
+  a name in the output language, its purpose and a level:
+  safe = well established, no concern at normal use; low = minor, e.g. mild irritant for some;
+  caution = known allergen/irritant, or concentration matters; warning = restricted, or treated as a
+  medicine in Japan; danger = prohibited or associated with serious harm; unknown = cannot assess.
+- Judge from the viewpoint of Japanese regulations (化粧品基準, 薬機法, food vs. medicine classification,
+  personal-import guidelines: cosmetics up to 24 units per item, medicines/quasi-drugs up to 2 months'
+  supply) as well as general safety evidence. Mention when something is normal abroad but restricted in Japan.
+- Be calibrated: do not scare people about well-studied ingredients (e.g. common preservatives at legal
+  levels). Do not call a product "safe" with certainty either; say what the evidence supports.
+- For health foods and supplements also:
+  - Classify the Japanese label type (トクホ / 機能性表示食品 / 栄養機能食品 / いわゆる健康食品 / foreign supplement)
+    from marks and text on the package, and read any notification number.
+  - List food allergens, highlighting Japan's 8 mandatory items (えび, かに, くるみ, 小麦, そば, 卵, 乳, 落花生).
+  - Check the daily amount of vitamins and minerals against Japanese upper limits (e.g. vitamin A, D, E,
+    B6, niacin, iron, zinc, selenium, iodine, calcium), and warn that combining supplements adds up.
+  - Point out interactions with medicines (e.g. St John's wort, ginkgo, vitamin K and warfarin,
+    grapefruit, red yeast rice (紅麹) and statins), and herbal ingredients with liver-injury reports.
+  - Flag disease-treatment claims, which are not permitted for foods in Japan.
+- If no ingredient list is visible, set readable accordingly, analyse what you can from the front, and
+  ask in "missing" for a photo of the back label.
+- This is general information, not medical advice. For people who are pregnant, have conditions or take
+  medicines, recommend asking a pharmacist or doctor where relevant.
+
+Write every human-readable field in the output language given by the user.`;
+
+const COMPARE_SYSTEM = `You help a consumer in Japan choose between several supplements, health foods or cosmetics.
+You receive earlier label analyses of each product (as JSON) and optionally prices and the user's goal.
+Compare them fairly and concretely:
+- Main active ingredients and their daily amounts; whether the amounts are meaningful.
+- Label type and strength of evidence (トクホ and 機能性表示食品 have more backing than いわゆる健康食品).
+- Safety: restricted ingredients, interactions with medicines, allergens, excess intake.
+- Price per day if prices are given.
+- Overlap: taking several of them together can double up on the same nutrient.
+Do not invent facts that are not in the analyses. If something important is unknown, say so.
+This is general information, not medical advice; suggest a pharmacist or doctor where relevant.
+Write every human-readable field in the output language given by the user.`;
+
+// ---- public/finalize.js ----
+
+const LEVEL_RANK = { safe: 0, low: 1, unknown: 1, caution: 2, warning: 3, danger: 4 };
+
+// Add the rule-based Japan checks and keyword allergen detection to an AI result.
+function finalize(result, lang, meta) {
+  const hits = checkRules(result.ingredients, [result.product.name]);
+  const allergens = mergeAllergens(result.allergens, detectAllergens(result.ingredients), lang);
+  // A rule hit can raise the overall level but never lower what the model said.
+  let level = result.overall.level;
+  for (const h of hits) if (LEVEL_RANK[h.level] > LEVEL_RANK[level]) level = h.level;
+  return {
+    ...result,
+    overall: { ...result.overall, level },
+    allergens,
+    rule_hits: hits.map((h) => ({ id: h.id, level: h.level, matched: h.matched, message: h.msg[lang] ?? h.msg.ja })),
+    meta,
+  };
+}
+
+// ---- public/compare-data.js ----
+
+// Keep only what the comparison needs, so the prompt stays small.
+function slimForCompare(item) {
+  const r = item.result ?? {};
+  return {
+    name: r.product?.name,
+    brand: r.product?.brand,
+    category: r.product?.category,
+    origin: r.product?.origin_country,
+    overall: r.overall,
+    mieru_score: computeScore(r).score ?? "no ingredient list",
+    label_type: r.food_label?.type,
+    label_note: r.food_label?.explanation,
+    claims_check: r.claims_check || undefined,
+    supply: r.supply,
+    price_yen: item.price || undefined,
+    price_per_day_yen: item.price && r.supply?.days ? Math.round(item.price / r.supply.days) : undefined,
+    ingredients: (r.ingredients ?? []).map((i) => ({ name: i.english || i.original, level: i.level, note: i.note })),
+    intake: r.intake,
+    interactions: r.interactions,
+    allergens: r.allergens?.map((a) => a.name),
+    rule_hits: r.rule_hits?.map((h) => h.id),
+    japan_notes: r.japan_notes?.map((n) => n.title),
+  };
+}
+
+// ---- public/compare.js ----
+// Side-by-side comparison table for 2-4 saved results.
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const badgeHtml = (L, level) => `<span class="badge lv-${esc(level)}">${esc(L.levels[level] ?? level)}</span>`;
+
+const SERIOUS = new Set(["caution", "warning", "danger"]);
+const key = (i) => (i.english || i.original || "").toLowerCase().replace(/\s+extract$/, "").trim();
+
+function pricePerDay(entry) {
+  const price = Number(entry.price);
+  const days = entry.result?.supply?.days;
+  return price > 0 && days > 0 ? Math.round(price / days) : null;
+}
+
+function renderCompareTable(entries, L) {
+  // Ingredients that appear in two or more products are highlighted.
+  const counts = new Map();
+  for (const e of entries) {
+    for (const k of new Set((e.result.ingredients ?? []).map(key))) counts.set(k, (counts.get(k) ?? 0) + 1);
+  }
+  const list = (items) => (items.length ? `<ul class="cell-list">${items.join("")}</ul>` : `<span class="muted">${esc(L.none)}</span>`);
+
+  const rows = [
+    [L.photo, (e) => (e.thumb ? `<img class="cmp-thumb" src="${e.thumb}" alt="">` : "")],
+    [L.product, (e) => `<strong>${esc(e.result.product?.name)}</strong><div class="muted small">${esc(e.result.product?.brand)}</div>`],
+    [L.scoreTitle, (e) => {
+      const sc = computeScore(e.result);
+      return sc.score === null ? `<span class="muted">—</span>` : `<span class="h-score big grade-${sc.grade}">${sc.score}<small>${sc.grade}</small></span>`;
+    }],
+    [L.overall, (e) => badgeHtml(L, e.result.overall?.level)],
+    [L.labelType, (e) => esc(L.labelTypes[e.result.food_label?.type] ?? L.categories[e.result.product?.category] ?? "—")],
+    [L.supply, (e) => {
+      const s = e.result.supply;
+      if (!s) return "—";
+      return `${esc(s.per_day) || "—"}${s.days > 0 ? `<div class="muted small">${esc(L.daysUnit.replace("{n}", s.days))}</div>` : ""}`;
+    }],
+    [L.price, (e) => {
+      const ppd = pricePerDay(e);
+      return `<input class="price" type="number" inputmode="numeric" min="0" placeholder="¥" value="${esc(e.price)}" data-id="${esc(e.id)}" aria-label="${esc(L.price)}">
+        <div class="ppd small" data-ppd="${esc(e.id)}">${ppd ? `${esc(L.perDay)} ¥${ppd.toLocaleString()}` : ""}</div>`;
+    }],
+    [L.cautionIngredients, (e) => list((e.result.ingredients ?? []).filter((i) => SERIOUS.has(i.level)).map((i) => `<li>${badgeHtml(L, i.level)} ${esc(i.name)}</li>`))],
+    [L.ruleHits, (e) => list((e.result.rule_hits ?? []).map((h) => `<li>${badgeHtml(L, h.level)} ${esc(h.matched)}</li>`))],
+    [L.allergens, (e) => list((e.result.allergens ?? []).map((a) => `<li class="${a.kind === "mandatory" ? "strong-text" : ""}">${esc(a.name)}</li>`))],
+    [L.interactions, (e) => list((e.result.interactions ?? []).map((i) => `<li>${badgeHtml(L, i.level)} ${esc(i.substance)} × ${esc(i.with_what)}</li>`))],
+    [L.intake, (e) => list((e.result.intake ?? []).map((n) => `<li>${badgeHtml(L, n.level)} ${esc(n.nutrient)} <span class="muted">${esc(n.amount)}</span></li>`))],
+    [L.commonIngredients, (e) => list((e.result.ingredients ?? []).map((i) => `<li class="${(counts.get(key(i)) ?? 0) > 1 ? "shared" : ""}">${esc(i.name)}</li>`))],
+  ];
+
+  return `<div class="cmp-scroll"><table class="cmp">
+    <tbody>${rows
+      .map(([label, cell]) => `<tr><th scope="row">${esc(label)}</th>${entries.map((e) => `<td>${cell(e)}</td>`).join("")}</tr>`)
+      .join("")}</tbody></table></div>`;
+}
+
+function renderAiCompare(r, L) {
+  const block = (title, inner) => (inner ? `<section class="card"><h2>${esc(title)}</h2>${inner}</section>` : "");
+  return `
+    ${block(L.aiResult, `<p>${esc(r.summary)}</p>`)}
+    ${block(L.bestFor, r.best_for?.length ? `<ul class="flags">${r.best_for.map((b) => `<li><span class="who">${esc(b.situation)}</span><br><strong>${esc(b.choice)}</strong><p>${esc(b.reason)}</p></li>`).join("")}</ul>` : "")}
+    ${block(L.differences, r.differences?.length ? `<ul class="flags">${r.differences.map((d) => `<li><strong>${esc(d.aspect)}</strong><p>${esc(d.detail)}</p></li>`).join("")}</ul>` : "")}
+    ${block(L.overlap, r.overlap ? `<p>${esc(r.overlap)}</p>` : "")}
+    ${block(L.cautions, r.cautions?.length ? `<ul class="flags">${r.cautions.map((c) => `<li><p>${esc(c)}</p></li>`).join("")}</ul>` : "")}`;
+}
+
+// ---- artifact/store.js ----
+// claude.ai artifact history store: each viewer's history lives in their own private
+// subtree of the artifact's database (data/users/<id>), so it follows them between iPhone
+// and Mac. Falls back to this browser's storage when the database is unavailable.
+const KEY = "mieru.history.v1";
+const MAX_ITEMS = 30;
+
+let cache = localLoad();
+let col = null;
+let listener = () => {};
+const priceTimers = new Map();
+
+function onHistoryChange(fn) {
+  listener = fn;
+}
+
+function localLoad() {
+  try {
+    const list = JSON.parse(localStorage.getItem(KEY) || "[]");
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+function localSave() {
+  for (let n = cache.length; n > 0; n--) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(cache.slice(0, n)));
+      return;
+    } catch {}
+  }
+}
+function changed() {
+  if (!col) localSave();
+  listener();
+}
+
+(async () => {
+  const [db, user] = await Promise.all([
+    window.claude?.use ? window.claude.use("db") : null,
+    window.claude?.use ? window.claude.use("user") : null,
+  ]);
+  const id = db && user ? await user.id() : null;
+  if (!id) return; // stay on browser storage
+  col = db.collection("data/users/" + id);
+  col.orderBy("date", "desc").limit(100).onSnapshot(
+    (snap) => {
+      cache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      listener();
+    },
+    () => {
+      col = null; // database gone for this visit: keep working locally
+      changed();
+    }
+  );
+})();
+
+function loadHistory() {
+  return cache;
+}
+
+function addHistory(result, thumb) {
+  const entry = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, date: new Date().toISOString(), thumb, result, price: "" };
+  const dropped = cache.slice(MAX_ITEMS - 1);
+  cache = [entry, ...cache].slice(0, MAX_ITEMS);
+  changed();
+  if (col) {
+    const { id, ...body } = entry;
+    col.doc(id).set(body).catch(() => {});
+    for (const old of dropped) col.doc(old.id).delete().catch(() => {});
+  }
+  return entry;
+}
+
+function updateHistory(id, patch) {
+  cache = cache.map((e) => (e.id === id ? { ...e, ...patch } : e));
+  changed();
+  if (!col) return;
+  // Coalesce typing into one write per pause.
+  clearTimeout(priceTimers.get(id));
+  priceTimers.set(id, setTimeout(() => col?.doc(id).update(patch).catch(() => {}), 700));
+}
+
+function removeHistory(id) {
+  cache = cache.filter((e) => e.id !== id);
+  changed();
+  col?.doc(id).delete().catch(() => {});
+}
+
+// ---- artifact/api.js ----
+// claude.ai artifact backend: Claude is asked through the page's `sample` capability, on the
+// viewer's own Claude plan (no API key, no server). PROMPTS is injected by build.mjs.
+
+const samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null);
+
+const LEVELS = ["safe", "low", "caution", "warning", "danger", "unknown"];
+const lvl = (v) => (LEVELS.includes(v) ? v : "unknown");
+const str = (v) => (typeof v === "string" ? v : v == null ? "" : String(v));
+const arr = (v) => (Array.isArray(v) ? v : []);
+const obj = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+
+function b64ToBlob({ media_type, data }) {
+  const bin = atob(data);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: media_type });
+}
+
+async function ask(prompt, options) {
+  const sample = await samplePromise;
+  if (!sample) throw new Error("unavailable");
+  try {
+    return await sample.json(prompt, options);
+  } catch (e) {
+    throw new Error(e?.code || "default");
+  }
+}
+
+// The model's JSON is not validated by the platform, so fill in anything missing.
+function normalizeAnalysis(raw) {
+  const r = obj(raw);
+  const p = obj(r.product);
+  const ingredients = arr(r.ingredients).map((i) => {
+    const o = obj(i);
+    return { original: str(o.original), english: str(o.english), name: str(o.name || o.original), purpose: str(o.purpose), level: lvl(o.level), note: str(o.note) };
+  });
+  return {
+    readable: typeof r.readable === "boolean" ? r.readable : ingredients.length > 0,
+    product: {
+      name: str(p.name), brand: str(p.brand), category: str(p.category) || "unknown",
+      origin_country: str(p.origin_country), label_languages: arr(p.label_languages).map(str),
+    },
+    supply: { per_day: str(obj(r.supply).per_day), days: Number(obj(r.supply).days) || 0 },
+    overall: { level: lvl(obj(r.overall).level), summary: str(obj(r.overall).summary) },
+    food_label: { type: str(obj(r.food_label).type) || "unknown", notification_number: str(obj(r.food_label).notification_number), explanation: str(obj(r.food_label).explanation) },
+    allergens: arr(r.allergens).map((a) => ({ name: str(obj(a).name), kind: ["mandatory", "recommended"].includes(obj(a).kind) ? obj(a).kind : "other", source: str(obj(a).source) })).filter((a) => a.name),
+    intake: arr(r.intake).map((n) => ({ nutrient: str(obj(n).nutrient), amount: str(obj(n).amount), level: lvl(obj(n).level), detail: str(obj(n).detail) })),
+    interactions: arr(r.interactions).map((n) => ({ substance: str(obj(n).substance), with_what: str(obj(n).with_what), level: lvl(obj(n).level), detail: str(obj(n).detail) })),
+    ingredients,
+    japan_notes: arr(r.japan_notes).map((n) => ({ title: str(obj(n).title), level: lvl(obj(n).level), detail: str(obj(n).detail) })),
+    cautions: arr(r.cautions).map((c) => ({ title: str(obj(c).title), who: str(obj(c).who), detail: str(obj(c).detail) })),
+    claims_problem: r.claims_problem === true,
+    claims_check: str(r.claims_check),
+    confidence: ["high", "medium", "low"].includes(r.confidence) ? r.confidence : "medium",
+    missing: str(r.missing),
+  };
+}
+
+const api = {
+  async analyze(images, lang) {
+    const prompt = `${ANALYZE_SYSTEM}
+
+The ${images.length} attached image(s) are photos of ONE product (front, back label / ingredient list, other sides).
+Analyse this product. Output language: ${LANG_NAMES[lang] ?? "Japanese"}.
+
+Reply with only one JSON object that follows this JSON Schema (descriptions explain each field). No other text.
+${PROMPTS.analysisSchema}`;
+    const raw = await ask(prompt, { images: images.map(b64ToBlob) });
+    return finalize(normalizeAnalysis(raw), lang, { demo: false });
+  },
+
+  async compare(items, goal, lang) {
+    const prompt = `${COMPARE_SYSTEM}
+
+Products:
+${JSON.stringify(items.map(slimForCompare), null, 1)}
+
+User's goal: ${goal || "(not given)"}
+Output language: ${LANG_NAMES[lang] ?? "Japanese"}.
+
+Reply with only one JSON object that follows this JSON Schema. No other text.
+${PROMPTS.compareSchema}`;
+    const r = obj(await ask(prompt, { cache: false }));
+    return {
+      summary: str(r.summary),
+      best_for: arr(r.best_for).map((b) => ({ situation: str(obj(b).situation), choice: str(obj(b).choice), reason: str(obj(b).reason) })),
+      differences: arr(r.differences).map((d) => ({ aspect: str(obj(d).aspect), detail: str(obj(d).detail) })),
+      overlap: str(r.overlap),
+      cautions: arr(r.cautions).map(str),
+    };
+  },
+
+  async isDemo() {
+    return false;
+  },
+};
+
+// ---- public/app.js ----
+
+const MAX_SIDE = 1568; // longest edge sent to the server; keeps uploads small but text legible
+const photos = [null, null, null, null];
+let lang = loadLang();
+let lastResult = null;
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const t = () => I18N[lang];
+
+function loadLang() {
+  try {
+    const saved = localStorage.getItem("lang");
+    if (saved && I18N[saved]) return saved;
+  } catch {}
+  const nav = (navigator.language || "ja").slice(0, 2);
+  return I18N[nav] ? nav : "ja";
+}
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  $("#lang").value = lang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => (el.textContent = t()[el.dataset.i18n]));
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => el.setAttribute("aria-label", t()[el.dataset.i18nAria]));
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => el.setAttribute("placeholder", t()[el.dataset.i18nPlaceholder]));
+  if (lastResult && !$("#result").hidden) renderResult(lastResult);
+  renderHistory();
+  if (!$("#compare").hidden) renderCompare();
+}
+
+$("#lang").addEventListener("change", (e) => {
+  lang = e.target.value;
+  try { localStorage.setItem("lang", lang); } catch {}
+  applyLang();
+});
+
+// ---------- photo slots ----------
+document.querySelectorAll(".slot").forEach((slot) => {
+  const idx = Number(slot.dataset.slot);
+  const input = $("input", slot);
+  const img = $("img", slot);
+  const removeBtn = $(".remove", slot);
+
+  input.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    try {
+      photos[idx] = await resize(file);
+      img.src = `data:${photos[idx].media_type};base64,${photos[idx].data}`;
+      img.hidden = false;
+      removeBtn.hidden = false;
+      slot.classList.add("filled");
+      hideError();
+    } catch {
+      showError(t().errors.bad_images);
+    }
+    input.value = "";
+  });
+
+  removeBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    photos[idx] = null;
+    img.hidden = true;
+    img.removeAttribute("src");
+    removeBtn.hidden = true;
+    slot.classList.remove("filled");
+  });
+});
+
+async function resize(file) {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+  return { media_type: "image/jpeg", data: dataUrl.split(",")[1] };
+}
+
+// ---------- analyse ----------
+$("#analyze").addEventListener("click", async () => {
+  const images = photos.filter(Boolean);
+  if (images.length === 0) return showError(t().needPhoto);
+  hideError();
+  $("#capture").hidden = true;
+  $("#loading").hidden = false;
+  try {
+    const body = await api.analyze(images, lang);
+    lastResult = body;
+    renderResult(body, { saved: true });
+    addHistory(body, await thumbnail(images[0]).catch(() => ""));
+  } catch (err) {
+    $("#capture").hidden = false;
+    showError(t().errors[err.message] || t().errors.default);
+  } finally {
+    $("#loading").hidden = true;
+  }
+});
+
+function showError(msg) { const el = $("#error"); el.textContent = msg; el.hidden = false; }
+function hideError() { $("#error").hidden = true; }
+
+// ---------- render ----------
+const badge = (level) => `<span class="badge lv-${esc(level)}">${esc(t().levels[level] ?? level)}</span>`;
+
+function renderResult(r, { saved = false } = {}) {
+  const L = t();
+  const p = r.product;
+  const section = (title, inner) => (inner ? `<section class="card"><h2>${esc(title)}</h2>${inner}</section>` : "");
+
+  const ruleHits = r.rule_hits?.length
+    ? `<ul class="flags">${r.rule_hits.map((h) => `<li>${badge(h.level)} <strong>${esc(h.matched)}</strong><p>${esc(h.message)}</p></li>`).join("")}</ul>`
+    : "";
+  const japan = r.japan_notes?.length
+    ? `<ul class="flags">${r.japan_notes.map((n) => `<li>${badge(n.level)} <strong>${esc(n.title)}</strong><p>${esc(n.detail)}</p></li>`).join("")}</ul>`
+    : "";
+  const cautions = r.cautions?.length
+    ? `<ul class="flags">${r.cautions.map((c) => `<li><strong>${esc(c.title)}</strong>${c.who ? ` <span class="who">${esc(c.who)}</span>` : ""}<p>${esc(c.detail)}</p></li>`).join("")}</ul>`
+    : "";
+  const ingredients = r.ingredients?.length
+    ? `<ol class="ingredients">${r.ingredients
+        .map(
+          (i) => `<li class="ing lv-border-${esc(i.level)}">
+            <div class="ing-head"><span class="dot lv-${esc(i.level)}" title="${esc(L.levels[i.level])}"></span>
+              <span class="ing-name">${esc(i.name)}</span>${badge(i.level)}</div>
+            <div class="ing-sub">${esc(i.original)}${i.english && i.english !== i.original ? ` · ${esc(i.english)}` : ""}</div>
+            ${i.purpose ? `<div class="ing-purpose">${esc(i.purpose)}</div>` : ""}
+            ${i.note ? `<div class="ing-note${["caution","warning","danger"].includes(i.level) ? " strong" : ""}">${esc(i.note)}</div>` : ""}
+          </li>`
+        )
+        .join("")}</ol>`
+    : "";
+
+  const fl = r.food_label;
+  const labelType =
+    fl && fl.type !== "not_food"
+      ? `<p><span class="pill">${esc(L.labelTypes[fl.type] ?? fl.type)}</span></p>
+         ${fl.notification_number ? `<p class="small"><strong>${esc(L.notifNo)}:</strong> ${esc(fl.notification_number)}</p>` : ""}
+         ${fl.explanation ? `<p>${esc(fl.explanation)}</p>` : ""}
+         ${fl.type === "kinousei" ? `<p class="small muted">${esc(L.verifyHint)}</p>` : ""}`
+      : "";
+  const allergenList = r.allergens?.length
+    ? `<ul class="chips">${r.allergens
+        .map((a) => `<li class="chip ${a.kind === "mandatory" ? "chip-strong" : ""}" title="${esc(a.source)}">${esc(a.name)}<small>${esc(L.allergenKinds[a.kind] ?? "")}</small></li>`)
+        .join("")}</ul>`
+    : "";
+  const intake = r.intake?.length
+    ? `<ul class="flags">${r.intake.map((n) => `<li>${badge(n.level)} <strong>${esc(n.nutrient)}</strong> <span class="who">${esc(n.amount)}</span><p>${esc(n.detail)}</p></li>`).join("")}</ul>`
+    : "";
+  const interactions = r.interactions?.length
+    ? `<ul class="flags">${r.interactions.map((n) => `<li>${badge(n.level)} <strong>${esc(n.substance)}</strong> × ${esc(n.with_what)}<p>${esc(n.detail)}</p></li>`).join("")}</ul>`
+    : "";
+
+  $("#result").innerHTML = `
+    ${scoreCard(r, L)}
+    <section class="card overall lv-bg-${esc(r.overall.level)}">
+      <div class="overall-head"><span>${esc(L.overall)}</span>${badge(r.overall.level)}</div>
+      <h2 class="product-name">${esc(p.name)}</h2>
+      <p>${esc(r.overall.summary)}</p>
+      <dl class="meta">
+        <dt>${esc(L.brand)}</dt><dd>${esc(p.brand) || "—"}</dd>
+        <dt>${esc(L.category)}</dt><dd>${esc(L.categories[p.category] ?? p.category)}</dd>
+        <dt>${esc(L.origin)}</dt><dd>${esc(p.origin_country) || "—"}</dd>
+        <dt>${esc(L.labelLang)}</dt><dd>${esc((p.label_languages || []).join(", ")) || "—"}</dd>
+        <dt>${esc(L.confidence)}</dt><dd>${esc(L.conf[r.confidence] ?? r.confidence)}</dd>
+      </dl>
+    </section>
+    ${section(L.ruleHits, ruleHits)}
+    ${section(L.labelType, labelType)}
+    ${section(L.allergens, allergenList)}
+    ${section(L.interactions, interactions)}
+    ${section(L.intake, intake)}
+    ${section(L.japanNotes, japan)}
+    ${section(L.cautions, cautions)}
+    ${section(L.ingredients, ingredients)}
+    ${section(L.claims, r.claims_check ? `<p>${esc(r.claims_check)}</p>` : "")}
+    ${section(L.missing, r.missing ? `<p>${esc(r.missing)}</p>` : "")}
+    ${saved ? `<p class="saved-note">${esc(L.savedNote)} <button type="button" class="link-btn" id="to-history">${esc(L.toHistory)}</button></p>` : ""}
+    <p class="disclaimer">${esc(L.disclaimer)}</p>
+    <button type="button" class="cta" id="again">${esc(L.again)}</button>
+  `;
+  $("#result").hidden = false;
+  $("#again").addEventListener("click", reset);
+  $("#to-history")?.addEventListener("click", () => showTab("history"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function reset() {
+  lastResult = null;
+  $("#result").hidden = true;
+  $("#capture").hidden = false;
+  document.querySelectorAll(".slot .remove").forEach((b) => b.hidden || b.click());
+}
+
+// ---------- score ----------
+function scoreRing(sc, size = 88) {
+  const r = 40, c = 2 * Math.PI * r;
+  const val = sc.score ?? 0;
+  return `<svg class="ring grade-${sc.grade ?? "none"}" viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
+    <circle cx="50" cy="50" r="${r}" class="ring-bg"/>
+    <circle cx="50" cy="50" r="${r}" class="ring-fg" stroke-dasharray="${(c * val) / 100} ${c}" transform="rotate(-90 50 50)"/>
+    <text x="50" y="50" class="ring-num">${sc.score ?? "—"}</text>
+    <text x="50" y="70" class="ring-grade">${sc.grade ?? ""}</text></svg>`;
+}
+
+function scoreCard(r, L) {
+  const sc = computeScore(r);
+  const reasons = sc.deductions
+    .slice(0, 6)
+    .map((d) => `<li>${badge(d.level)} ${esc(d.label === "claims" ? L.claims : d.label)} <span class="minus">−${d.points}</span></li>`)
+    .join("");
+  return `<section class="card score-card">
+    ${scoreRing(sc)}
+    <div class="score-text">
+      <div class="score-title">${esc(L.scoreTitle)}</div>
+      <div class="score-desc">${esc(sc.score === null ? L.scoreNone : L.gradeDesc[sc.grade])}</div>
+      ${reasons ? `<ul class="deductions">${reasons}</ul>` : sc.score === 100 ? `<p class="small muted">${esc(L.noDeductions)}</p>` : ""}
+      <details class="small muted"><summary>${esc(L.scoreHow)}</summary><p>${esc(L.scoreHowText)}</p></details>
+    </div>
+  </section>`;
+}
+
+// ---------- thumbnails ----------
+function thumbnail(img, side = 240) {
+  return new Promise((resolve, reject) => {
+    const el = new Image();
+    el.onload = () => {
+      const scale = Math.min(1, side / Math.max(el.width, el.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(el.width * scale);
+      c.height = Math.round(el.height * scale);
+      c.getContext("2d").drawImage(el, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", 0.7));
+    };
+    el.onerror = reject;
+    el.src = `data:${img.media_type};base64,${img.data}`;
+  });
+}
+
+// ---------- tabs ----------
+function showTab(tab) {
+  // "compare" opens the last comparison, or the history list to pick products first.
+  if (tab === "compare") {
+    // Use the products checked in the history list, if any.
+    if (selected.size >= 2 && [...selected].join() !== compareIds.join()) {
+      compareIds = [...selected];
+      $("#ai-result").innerHTML = "";
+      $("#compare-error").hidden = true;
+    }
+    if (compareEntries().length < 2) tab = "history";
+    else renderCompare();
+  }
+  document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+  $("#history").hidden = tab !== "history";
+  $("#compare").hidden = tab !== "compare";
+  if (tab === "scan") {
+    const hasResult = lastResult && $("#result").innerHTML;
+    $("#result").hidden = !hasResult;
+    $("#capture").hidden = Boolean(hasResult);
+  } else {
+    $("#capture").hidden = true;
+    $("#result").hidden = true;
+    $("#loading").hidden = true;
+  }
+  window.scrollTo({ top: 0 });
+}
+document.querySelectorAll(".tab").forEach((b) =>
+  b.addEventListener("click", () => {
+    // Tapping Scan while a result is shown starts a new scan.
+    if (b.dataset.tab === "scan" && !$("#result").hidden) reset();
+    showTab(b.dataset.tab);
+  })
+);
+
+// ---------- history ----------
+const selected = new Set();
+
+function renderHistory() {
+  const L = t();
+  const list = loadHistory();
+  for (const id of [...selected]) if (!list.some((e) => e.id === id)) selected.delete(id);
+  $("#history-count").textContent = list.length ? String(list.length) : "";
+  $("#history-empty").hidden = list.length > 0;
+  $("#history-list").innerHTML = list
+    .map((e) => {
+      const r = e.result;
+      const date = new Date(e.date).toLocaleDateString(lang, { month: "short", day: "numeric" });
+      const ppd = pricePerDay(e);
+      const sc = computeScore(r);
+      const serious = (r.ingredients ?? []).filter((i) => ["caution", "warning", "danger"].includes(i.level)).length;
+      const alerts = [
+        [serious, L.alertIngredients, "alert-ing"],
+        [r.allergens?.length ?? 0, L.allergens, "alert-allergy"],
+        [r.interactions?.length ?? 0, L.alertInteractions, "alert-drug"],
+      ].filter(([n]) => n > 0);
+      const isSel = selected.has(e.id);
+      return `<li class="h-card ${isSel ? "selected" : ""}">
+        <button type="button" class="h-open" data-open="${esc(e.id)}">
+          ${e.thumb ? `<img src="${e.thumb}" alt="">` : `<span class="h-noimg"></span>`}
+          <span class="h-body">
+            <span class="h-name">${esc(r.product?.name)}</span>
+            <span class="h-sub">${esc(L.categories[r.product?.category] ?? "")} · ${esc(date)}${ppd ? ` · ¥${ppd}/${esc(L.perDay)}` : ""}</span>
+            <span class="h-alerts">${
+              alerts.length
+                ? alerts.map(([n, label, cls]) => `<span class="alert-pill ${cls}">${esc(label)} ${n}</span>`).join("")
+                : `<span class="alert-pill alert-none">${esc(L.noAlerts)}</span>`
+            }</span>
+          </span>
+          <span class="h-scorebox grade-${sc.grade ?? "none"}">${sc.score ?? "—"}<small>${sc.grade ?? ""}</small></span>
+        </button>
+        <div class="h-actions">
+          <label class="h-check"><input type="checkbox" data-id="${esc(e.id)}" ${isSel ? "checked" : ""}> ${esc(L.addCompare)}</label>
+          <button type="button" class="h-del" data-del="${esc(e.id)}">${esc(L.remove)}</button>
+        </div>
+      </li>`;
+    })
+    .join("");
+  const n = selected.size;
+  const btn = $("#compare-btn");
+  btn.textContent = L.compareN.replace("{n}", n);
+  btn.disabled = n < 2 || n > 4;
+}
+
+$("#history-list").addEventListener("change", (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  if (e.target.checked) {
+    if (selected.size >= 4) { e.target.checked = false; return; }
+    selected.add(id);
+  } else selected.delete(id);
+  renderHistory();
+});
+
+$("#history-list").addEventListener("click", (e) => {
+  const open = e.target.closest("[data-open]")?.dataset.open;
+  const del = e.target.closest("[data-del]")?.dataset.del;
+  if (del) {
+    selected.delete(del);
+    removeHistory(del);
+  } else if (open) {
+    const entry = loadHistory().find((x) => x.id === open);
+    if (!entry) return;
+    lastResult = entry.result;
+    renderResult(entry.result);
+    showTab("scan");
+  }
+});
+
+// ---------- compare ----------
+let compareIds = [];
+
+$("#compare-btn").addEventListener("click", () => {
+  compareIds = [...selected];
+  $("#ai-result").innerHTML = "";
+  $("#compare-error").hidden = true;
+  renderCompare();
+  showTab("compare");
+});
+$("#back-history").addEventListener("click", () => showTab("history"));
+
+function compareEntries() {
+  const list = loadHistory();
+  return compareIds.map((id) => list.find((e) => e.id === id)).filter(Boolean);
+}
+
+function renderCompare() {
+  $("#compare-table").innerHTML = renderCompareTable(compareEntries(), t());
+}
+
+$("#compare-table").addEventListener("input", (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  updateHistory(id, { price: e.target.value });
+  const entry = loadHistory().find((x) => x.id === id);
+  const ppd = entry && pricePerDay(entry);
+  document.querySelector(`[data-ppd="${CSS.escape(id)}"]`).textContent = ppd ? `${t().perDay} ¥${ppd.toLocaleString()}` : "";
+});
+
+$("#ai-compare-btn").addEventListener("click", async () => {
+  const entries = compareEntries();
+  $("#compare-error").hidden = true;
+  $("#ai-result").innerHTML = "";
+  $("#ai-loading").hidden = false;
+  $("#ai-compare-btn").disabled = true;
+  try {
+    const body = await api.compare(entries.map((e) => ({ result: e.result, price: Number(e.price) || 0 })), $("#goal").value, lang);
+    $("#ai-result").innerHTML = renderAiCompare(body, t());
+  } catch (err) {
+    const el = $("#compare-error");
+    el.textContent = t().errors[err.message] || t().errors.default;
+    el.hidden = false;
+  } finally {
+    $("#ai-loading").hidden = true;
+    $("#ai-compare-btn").disabled = false;
+  }
+});
+
+// ---------- init ----------
+onHistoryChange(() => {
+  renderHistory();
+  // Keep the comparison table in sync when history changes elsewhere (another device), but
+  // not while the viewer is typing a price into it.
+  if (!$("#compare").hidden && !document.activeElement?.classList.contains("price")) renderCompare();
+});
+applyLang();
+api.isDemo().then((demo) => ($("#demo-banner").hidden = !demo));
+
+</script>

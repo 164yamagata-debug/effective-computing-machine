@@ -12,10 +12,12 @@
   --warning: #c2410c;
   --danger: #b91c1c;
   --unknown: #6b7280;
+  --on-level: #ffffff; /* text on a level-colored badge */
   color-scheme: light;
 }
+/* Dark palette: follows the system setting unless claude.ai's theme is set explicitly. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #111615;
     --card: #1a201f;
     --text: #e8eeec;
@@ -29,8 +31,26 @@
     --warning: #fb923c;
     --danger: #f87171;
     --unknown: #9ca3af;
+    --on-level: #0b1110;
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #111615;
+  --card: #1a201f;
+  --text: #e8eeec;
+  --muted: #9aa8a4;
+  --line: #2c3533;
+  --accent: #2dd4bf;
+  --accent-ink: #062a26;
+  --safe: #4ade80;
+  --low: #a3e635;
+  --caution: #fbbf24;
+  --warning: #fb923c;
+  --danger: #f87171;
+  --unknown: #9ca3af;
+  --on-level: #0b1110;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -42,11 +62,15 @@ body {
   line-height: 1.6;
   -webkit-text-size-adjust: 100%;
 }
-main { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
+main {
+  max-width: 640px; margin: 0 auto; padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
 
 .top {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  max-width: 640px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) 16px 8px;
+  max-width: 640px; margin: 0 auto; padding-block: 16px 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .logo { width: 40px; height: 40px; border-radius: 10px; flex: none; }
@@ -119,7 +143,7 @@ h1 { font-size: 20px; margin: 0; letter-spacing: 0.02em; }
 
 .badge {
   display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px;
-  color: #fff; white-space: nowrap; vertical-align: middle;
+  color: var(--on-level); white-space: nowrap; vertical-align: middle;
 }
 .lv-safe { background: var(--safe); }
 .lv-low { background: var(--low); }
@@ -127,7 +151,6 @@ h1 { font-size: 20px; margin: 0; letter-spacing: 0.02em; }
 .lv-warning { background: var(--warning); }
 .lv-danger { background: var(--danger); }
 .lv-unknown { background: var(--unknown); }
-@media (prefers-color-scheme: dark) { .badge { color: #111; } }
 
 .lv-bg-safe { border-color: var(--safe); }
 .lv-bg-low { border-color: var(--low); }
@@ -308,10 +331,9 @@ body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
 .h-scorebox {
   flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
   width: 56px; height: 56px; border-radius: 12px; font-size: 22px; font-weight: 800; line-height: 1;
-  color: #fff; background: var(--grade-color, var(--unknown));
+  color: var(--on-level); background: var(--grade-color, var(--unknown));
 }
 .h-scorebox small { font-size: 11px; font-weight: 700; margin-top: 3px; opacity: 0.9; }
-@media (prefers-color-scheme: dark) { .h-scorebox { color: #0b1110; } }
 .h-actions {
   display: flex; justify-content: space-between; align-items: center;
   padding: 6px 12px; border-top: 1px solid var(--line); font-size: 13px;
